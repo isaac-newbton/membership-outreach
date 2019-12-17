@@ -28,6 +28,11 @@ class Organization
      */
     private $surveys;
 
+    /**
+     * @ORM\Column(type="string", length=30, nullable=true)
+     */
+    private $custom_id;
+
     public function __construct()
     {
         $this->surveys = new ArrayCollection();
@@ -77,6 +82,18 @@ class Organization
                 $survey->setOrganization(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCustomId(): ?string
+    {
+        return $this->custom_id;
+    }
+
+    public function setCustomId(?string $custom_id): self
+    {
+        $this->custom_id = $custom_id;
 
         return $this;
     }
