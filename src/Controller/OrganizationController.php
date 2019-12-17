@@ -14,6 +14,6 @@ class OrganizationController extends AbstractController {
         $organizations = $this->getDoctrine()->getRepository(Organization::class)->findAll();
         return $this->render("organization/list.html.twig", [
             'organizations' => $organizations
-        ])
+        ]);
     }
 }
