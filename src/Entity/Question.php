@@ -34,12 +34,12 @@ class Question
     private $options;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\SurveyTemplate", mappedBy="Questions")
+     * @ORM\ManyToMany(targetEntity="App\Entity\SurveyTemplate", mappedBy="questions")
      */
     private $surveyTemplates;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SurveyResponse", mappedBy="Question", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\SurveyResponse", mappedBy="question", orphanRemoval=true)
      */
     private $surveyResponses;
 
