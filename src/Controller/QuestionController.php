@@ -52,8 +52,8 @@ class QuestionController extends AbstractController {
         $question = $entityManager->getRepository(Question::class)->find($id);
 
         if ($question) {
-            // $entityManager->remove($question);
-            // $entityManager->flush();
+            $entityManager->remove($question);
+            $entityManager->flush();
         } else {
             throw $this->createNotFoundException(
                 'No question found for id '.$id
