@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+{% for question in questions %}
+{{ question.id}}
+{{ question.question}}
+{{ question.options}}
+{% endfor %}
+
+{% endblock %}
