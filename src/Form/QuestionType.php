@@ -25,6 +25,7 @@ class QuestionType extends AbstractType {
                 'attr' => [
                     'placeholder' => 'option 1, option 2, option 3, etc',
                 ],
+                'required' => false
             ])
             ->add('surveyTemplates')
         ;

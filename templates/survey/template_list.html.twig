@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+{% block body %}
+	<div class="container">
+		<div class="row">
+			<h1>Survey Templates</h1>
+			{% for template in templates %}
+			{{template.id}}
+			{{template.name}}
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}
