@@ -21,17 +21,12 @@ class SurveyType extends AbstractType
                 'choice_label' => function($st) {
                     return $st->getName();
                 },
-                'multiple' => true,
-                'by_reference' => false,
-                
             ])
             ->add('organization', EntityType::class, [
                 'class' => Organization::class,
                 'choice_label' => function($o) {
                     return $o->getName();
                 },
-                'multiple' => true,
-                'by_reference' => false,
             ])
         ;
     }
