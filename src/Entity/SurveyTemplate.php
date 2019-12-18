@@ -29,7 +29,7 @@ class SurveyTemplate
     private $questions;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Survey", mappedBy="SurveyTemplate", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Survey", mappedBy="surveyTemplate", orphanRemoval=true)
      */
     private $surveys;
 

@@ -24,7 +24,7 @@ class Survey
     private $dueDate;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SurveyResponse", mappedBy="Survey", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\SurveyResponse", mappedBy="survey", orphanRemoval=true)
      */
     private $surveyResponses;
 
