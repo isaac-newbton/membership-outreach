@@ -24,7 +24,7 @@ class Organization
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Survey", mappedBy="Organization")
+     * @ORM\OneToMany(targetEntity="App\Entity\Survey", mappedBy="organization")
      */
     private $surveys;
 
