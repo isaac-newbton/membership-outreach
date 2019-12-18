@@ -35,13 +35,13 @@ class Survey
     private $surveyTemplate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Organization", inversedBy="surveys")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Organization", mappedBy="surveys")
      */
-    private $organization;
+    private $organizations;
 
     public function __construct()
     {
-        $this->surveyResponses = new ArrayCollection();
+        $this->organizations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -104,14 +104,30 @@ class Survey
         return $this;
     }
 
-    public function getOrganization(): ?Organization
+    /**
+     * @return Collection|Organization[]
+     */
+    public function getOrganizations(): Collection
     {
-        return $this->organization;
+        return $this->organizations;
     }
 
-    public function setOrganization(?Organization $organization): self
+    public function addOrganization(Organization $organization): self
     {
-        $this->organization = $organization;
+        if (!$this->organizations->contains($organization)) {
+            $this->organizations[] = $organization;
+            $organization->addSurvey($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganization(Organization $organization): self
+    {
+        if ($this->organizations->contains($organization)) {
+            $this->organizations->removeElement($organization);
+            $organization->removeSurvey($this);
+        }
 
         return $this;
     }

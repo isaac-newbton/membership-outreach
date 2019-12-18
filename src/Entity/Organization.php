@@ -24,14 +24,14 @@ class Organization
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Survey", mappedBy="organization")
-     */
-    private $surveys;
-
-    /**
      * @ORM\Column(type="string", length=30, nullable=true)
      */
     private $custom_id;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Survey", inversedBy="organizations")
+     */
+    private $surveys;
 
     public function __construct()
     {
@@ -55,6 +55,18 @@ class Organization
         return $this;
     }
 
+    public function getCustomId(): ?string
+    {
+        return $this->custom_id;
+    }
+
+    public function setCustomId(?string $custom_id): self
+    {
+        $this->custom_id = $custom_id;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Survey[]
      */
@@ -67,7 +79,6 @@ class Organization
     {
         if (!$this->surveys->contains($survey)) {
             $this->surveys[] = $survey;
-            $survey->setOrganization($this);
         }
 
         return $this;
@@ -77,23 +88,7 @@ class Organization
     {
         if ($this->surveys->contains($survey)) {
             $this->surveys->removeElement($survey);
-            // set the owning side to null (unless already changed)
-            if ($survey->getOrganization() === $this) {
-                $survey->setOrganization(null);
-            }
         }
-
-        return $this;
-    }
-
-    public function getCustomId(): ?string
-    {
-        return $this->custom_id;
-    }
-
-    public function setCustomId(?string $custom_id): self
-    {
-        $this->custom_id = $custom_id;
 
         return $this;
     }

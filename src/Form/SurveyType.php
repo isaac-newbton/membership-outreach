@@ -2,7 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Organization;
 use App\Entity\Survey;
+use App\Entity\SurveyTemplate;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,8 +16,23 @@ class SurveyType extends AbstractType
     {
         $builder
             ->add('dueDate')
-            ->add('surveyTemplate')
-            ->add('organization')
+            ->add('surveyTemplate', EntityType::class, [
+                'class' => SurveyTemplate::class,
+                'choice_label' => function($st) {
+                    return $st->getName();
+                },
+                'multiple' => true,
+                'by_reference' => false,
+                
+            ])
+            ->add('organization', EntityType::class, [
+                'class' => Organization::class,
+                'choice_label' => function($o) {
+                    return $o->getName();
+                },
+                'multiple' => true,
+                'by_reference' => false,
+            ])
         ;
     }
 
