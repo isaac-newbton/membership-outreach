@@ -15,7 +15,14 @@ class SurveyTemplateType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('questions', EntityType::class, ['class'=>Question::class, 'choice_label' => function($q){return $q->getQuestion();}])
+            ->add('questions', EntityType::class,
+            ['class'=>Question::class,
+            'choice_label' => function($q){
+                return $q->getQuestion(); // TODO: change question property to different label
+            },
+            'multiple' => true,
+            'expanded' => false,
+            ])
         ;
     }
 
