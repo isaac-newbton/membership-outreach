@@ -38,8 +38,8 @@ class SurveyController extends AbstractController
                 $s = clone $survey;
                 $s->setOrganization($o);
                 $entityManager->persist($s);
-                $entityManager->flush();
             }
+            $entityManager->flush();
 
 
             return $this->redirectToRoute("surveys_list");
