@@ -92,7 +92,7 @@ class SurveyController extends AbstractController
             return $this->redirectToRoute('surveys_list');
         }
 
-        return $this->render("survey/form.html.twig", [
+        return $this->render("survey/response_form.html.twig", [
             "form" => $form->createView(),
             "survey" => $survey,
             "questions" => $survey->getSurveyTemplate()->getQuestions(),
