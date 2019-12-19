@@ -27,6 +27,8 @@ class SurveyType extends AbstractType
                 'choice_label' => function($o) {
                     return $o->getName();
                 },
+                'mapped' => false,
+                'multiple' => true
             ])
         ;
     }

@@ -15,7 +15,11 @@ class SurveyController extends AbstractController
      * @Route("/surveys/list", name="surveys_list")
      */
     public function showSurveys(){
-        return $this->render("survey/list.html.twig");
+        $surveys = $this->getDoctrine()->getRepository(Survey::class)->findAll();
+
+        return $this->render("survey/list.html.twig", [
+            "surveys" => $surveys
+        ]);
     }
 
     /**
@@ -27,10 +31,16 @@ class SurveyController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()){
-            $survey = $form->getData();
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($survey);
-            $entityManager->flush();
+
+            $survey = $form->getData();
+            foreach ($form->get('organization')->getData() as $o){
+                $s = clone $survey;
+                $s->setOrganization($o);
+                $entityManager->persist($s);
+                $entityManager->flush();
+            }
+
 
             return $this->redirectToRoute("surveys_list");
         }

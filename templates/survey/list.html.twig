@@ -2,5 +2,14 @@
 
 
 {% block body %}
+<div class="container">
+	<div class="row">
+		{% for survey in surveys %}
+			<div class="col">
+				{{ survey.id }}
+			</div>
+		{% endfor %}
+	</div>
+</div>
 
 {% endblock %}
