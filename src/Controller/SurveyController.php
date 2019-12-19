@@ -7,6 +7,7 @@ use App\Entity\Survey;
 use App\Entity\SurveyResponse;
 use App\Form\SurveyResponseType;
 use App\Form\SurveyType;
+use App\Repository\SurveyResponseRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -15,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\Survey\SurveyHandler;
 
 class SurveyController extends AbstractController
 {
@@ -32,7 +34,7 @@ class SurveyController extends AbstractController
     /**
      * @Route("/surveys/add", name="surveys_add")
      */
-    public function addSurvey(Request $request){
+    public function addSurvey(Request $request, SurveyHandler $survey_handler){
         $form = $this->createForm(SurveyType::class, new Survey());
         $form->add('save', SubmitType::class);
 
@@ -45,9 +47,9 @@ class SurveyController extends AbstractController
                 $s = clone $survey;
                 $s->setOrganization($o);
                 $entityManager->persist($s);
+                $entityManager->flush();
+                $survey_handler->generateResponses($s, $entityManager);
             }
-            $entityManager->flush();
-
 
             return $this->redirectToRoute("surveys_list");
         }
@@ -70,24 +72,28 @@ class SurveyController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted()){
             $entityManager = $this->getDoctrine()->getManager();
-            // get current all question ids
-            $surveyTemplate_questionIds = [];
-            foreach ($survey->getSurveyTemplate()->getQuestions() as $question){
-                $surveyTemplate_questionIds[] = $question->getId();
-            }
-            
-            $surveyResponse = new SurveyResponse();
-            $surveyResponse->setSurvey($survey);
-
-            foreach ($_POST as $k => $v) {
-                if (in_array($k, $surveyTemplate_questionIds)){
-                    $surveyResponse = new SurveyResponse();
-                    $surveyResponse->setSurvey($survey);
-                    $surveyResponse->setQuestion($this->getDoctrine()->getRepository(Question::class)->find($k));
-                    $surveyResponse->setAnswer($v);
-                    $entityManager->persist($surveyResponse);
+            // get current all response ids
+            $surveyTemplate_responseIds = [];
+            foreach ($survey->getSurveyResponses() as $response){
+                $surveyTemplate_responseIds[] = $response->getId();
+                if(isset($_POST[$response->getId()])){
+                    $response->setAnswer($_POST[$response->getId()]);
+                    $entityManager->persist($response);
                 }
             }
+            
+            // $surveyResponse = new SurveyResponse();
+            // $surveyResponse->setSurvey($survey);
+
+            // foreach ($_POST as $k => $v) {
+            //     if (in_array($k, $surveyTemplate_questionIds)){
+            //         $surveyResponse = new SurveyResponse();
+            //         $surveyResponse->setSurvey($survey);
+            //         $surveyResponse->setQuestion($this->getDoctrine()->getRepository(Question::class)->find($k));
+            //         $surveyResponse->setAnswer($v);
+            //         $entityManager->persist($surveyResponse);
+            //     }
+            // }
             $entityManager->flush();
             return $this->redirectToRoute('surveys_list');
         }
@@ -96,6 +102,7 @@ class SurveyController extends AbstractController
             "form" => $form->createView(),
             "survey" => $survey,
             "questions" => $survey->getSurveyTemplate()->getQuestions(),
+            "responses" => $survey->getSurveyResponses()
         ]);
     }
 }
