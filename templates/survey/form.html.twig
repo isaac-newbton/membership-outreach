@@ -4,40 +4,8 @@
 	<div class="row">
 		<div class="col">
 			<!-- <form action="" method="POST"> -->
-				{{ form_start(form)}}
+				{{ form(form)}}
 
-				{% for question in questions %}
-
-					<label for="{{question.id}}">{{question.question}}</label>
-
-					{% if (question.type == 1) %}
-						<input type="text" name="{{question.id}}" id="">
-					{% endif %}
-
-					{% if (question.type == 2) %}
-						<textarea name="{{question.id}}" id="" cols="30" rows="10"></textarea>
-					{% endif %}
-
-					{% if (question.type == 3) %}
-						<input type="number" name="{{question.id}}" id="">
-					{% endif %}
-
-					{% if (question.type == 4) %}
-						<input type="radio" name="{{question.id}}" value="true" id="">
-						<input type="radio" name="{{question.id}}" value="false" id="">
-					{% endif %}
-
-					{% if (question.type == 5) %}
-						<select type="text" name="{{question.id}}" id="">
-							{% for option in question.options|split(',') %}
-								<option value="{{option}}">{{option}}</option>
-							{% endfor %}
-						</select>
-					{% endif %}
-
-				{% endfor %}
-				<input type="submit" value="submit">
-				{{form_end(form)}}
 			<!-- </form> -->
 		</div>
 	</div>
