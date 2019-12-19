@@ -1,0 +1,13 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="container">
+	<div class="row">
+		{% for survey in surveys %}
+			<div class="col">
+				<a href="{{ path("survey_response", {id: survey.id}) }}">{{ survey.surveyTemplate.name }}</a>
+			</div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}

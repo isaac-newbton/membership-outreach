@@ -49,4 +49,14 @@ class SurveyController extends AbstractController
             "form" => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/surveys/{id}", name="survey_response", requirements={"id"="\d+"})
+     */
+    public function showSurvey(Survey $survey){
+        $survey->questions = 'asdf';
+        return $this->render("survey/response/form.html.twig", [
+            "survey" => $survey
+        ]);
+    }
 }
