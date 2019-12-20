@@ -4,9 +4,10 @@
 <div class="container-xl">
 	<div class="row">
 		<div class="col">
-			<h1>Add an Organization</h1>
-			{{ form(form) }}
+			<h1>User Account: {{app.user.email}}</h1>
+			{{form(form)}}
+			<pre>{{dump(form_data)}}</pre>
 		</div>
 	</div>
 </div>
-{% endblock body %}
+{% endblock %}
