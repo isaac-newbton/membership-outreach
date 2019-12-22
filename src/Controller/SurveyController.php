@@ -2,12 +2,21 @@
 
 namespace App\Controller;
 
+use App\Entity\Question;
 use App\Entity\Survey;
+use App\Entity\SurveyResponse;
+use App\Form\SurveyResponseType;
 use App\Form\SurveyType;
+use App\Repository\SurveyResponseRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\Survey\SurveyHandler;
 
 class SurveyController extends AbstractController
 {
@@ -25,7 +34,7 @@ class SurveyController extends AbstractController
     /**
      * @Route("/surveys/add", name="surveys_add")
      */
-    public function addSurvey(Request $request){
+    public function addSurvey(Request $request, SurveyHandler $survey_handler){
         $form = $this->createForm(SurveyType::class, new Survey());
         $form->add('save', SubmitType::class);
 
@@ -38,9 +47,9 @@ class SurveyController extends AbstractController
                 $s = clone $survey;
                 $s->setOrganization($o);
                 $entityManager->persist($s);
+                $entityManager->flush();
+                $survey_handler->generateResponses($s, $entityManager);
             }
-            $entityManager->flush();
-
 
             return $this->redirectToRoute("surveys_list");
         }
@@ -51,12 +60,46 @@ class SurveyController extends AbstractController
     }
 
     /**
+<<<<<<< HEAD
      * @Route("/surveys/{id}", name="survey_response", requirements={"id"="\d+"})
      */
     public function showSurvey(Survey $survey){
         $survey->questions = 'asdf';
         return $this->render("survey/response/form.html.twig", [
             "survey" => $survey
+=======
+     * @Route("surveys/{id}", name="surveys_response", requirements={"id"="\d+"})
+     */
+    public function surveyResponse(Request $request, Survey $survey){
+
+        $form = $this->createForm(SurveyResponseType::class, new SurveyResponse());
+        $form->remove('survey');
+        $form->remove('question');
+        $form->remove('answer');
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted()){
+            $entityManager = $this->getDoctrine()->getManager();
+            // get current all response ids
+            $surveyTemplate_responseIds = [];
+            foreach ($survey->getSurveyResponses() as $response){
+                $surveyTemplate_responseIds[] = $response->getId();
+                if(isset($_POST[$response->getId()])){
+                    $response->setAnswer($_POST[$response->getId()]);
+                    $entityManager->persist($response);
+                }
+            }
+
+            $entityManager->flush();
+            return $this->redirectToRoute('surveys_list');
+        }
+
+        return $this->render("survey/response_form.html.twig", [
+            "form" => $form->createView(),
+            "survey" => $survey,
+            "questions" => $survey->getSurveyTemplate()->getQuestions(),
+            "responses" => $survey->getSurveyResponses()
+>>>>>>> master
         ]);
     }
 }
