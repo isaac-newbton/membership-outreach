@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Organization;
+use App\Entity\Survey;
 use App\Form\OrganizationType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -39,6 +40,19 @@ class OrganizationController extends AbstractController {
 
         return $this->render("organization/form.html.twig", [
             "form" => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("organizations/{id}/surveys", name="organization_surveys", requirements={"id"="\d+"})
+     */
+    public function showOrganizationSurveys(Organization $organization){
+        $organizationSurveys = $this->getDoctrine()->getRepository(Survey::class)->findBy([
+            'organization' => $organization
+        ]);
+
+        return $this->render("organization/surveys.html.twig", [
+           "surveys" => $organizationSurveys 
         ]);
     }
 }

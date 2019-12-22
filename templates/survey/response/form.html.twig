@@ -1,0 +1,19 @@
+{% extends "base.html.twig" %}
+{% block body %}
+
+{% for question in survey.surveyTemplate.questions %}
+
+	{% if (question.type == 1) %}
+        {% include "form-inputs/text.input.twig" with { question:question } %}
+	{% elseif (question.type == 2) %}
+		{% include "form-inputs/textarea.input.twig" with { question:question } %}
+	{% elseif (question.type == 3) %}
+		{% include "form-inputs/number.input.twig" with { question:question } %}
+	{% elseif (question.type == 4) %}
+		{% include "form-inputs/boolean.input.twig" with { question:question } %}
+	{% elseif (question.type == 5) %}
+		{% include "form-inputs/select.input.twig" with { question:question } %}
+	{% endif %}
+{% endfor %}
+
+{% endblock %}
