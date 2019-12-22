@@ -32,6 +32,8 @@ class SurveyTemplateController extends AbstractController{
 			$entityManager = $this->getDoctrine()->getManager();
 			$entityManager->persist($template);
 			$entityManager->flush();
+
+			return $this->redirectToRoute("survey_templates_list");
 		}
 
 		return $this->render("survey/template_form.html.twig", [

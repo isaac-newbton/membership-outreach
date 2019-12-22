@@ -81,19 +81,7 @@ class SurveyController extends AbstractController
                     $entityManager->persist($response);
                 }
             }
-            
-            // $surveyResponse = new SurveyResponse();
-            // $surveyResponse->setSurvey($survey);
 
-            // foreach ($_POST as $k => $v) {
-            //     if (in_array($k, $surveyTemplate_questionIds)){
-            //         $surveyResponse = new SurveyResponse();
-            //         $surveyResponse->setSurvey($survey);
-            //         $surveyResponse->setQuestion($this->getDoctrine()->getRepository(Question::class)->find($k));
-            //         $surveyResponse->setAnswer($v);
-            //         $entityManager->persist($surveyResponse);
-            //     }
-            // }
             $entityManager->flush();
             return $this->redirectToRoute('surveys_list');
         }
