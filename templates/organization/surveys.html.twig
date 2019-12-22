@@ -5,7 +5,7 @@
 	<div class="row">
 		{% for survey in surveys %}
 			<div class="col">
-				<a href="{{ path("survey_response", {id: survey.id}) }}">{{ survey.surveyTemplate.name }}</a>
+				<a href="{{ path("surveys_response", {id: survey.id}) }}">{{ survey.surveyTemplate.name }}</a>
 			</div>
 		{% endfor %}
 	</div>

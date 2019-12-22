@@ -15,8 +15,12 @@
                     <li class="nav-item">
                         <a href="/" class="nav-link">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a href="{{ path("organizations_list") }}" class="nav-link">Organizations</a>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" id="navQuestionsDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Organizations</a>
+                        <div class="dropdown-menu" aria-labelledby="navQuestionsDropdownMenuLink">
+                            <a href="{{path('organizations_list')}}" class="dropdown-item">List</a>
+                            <a href="{{path('organizations_add')}}" class="dropdown-item">Create</a>
+                        </div>
                     </li>
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" id="navQuestionsDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Questions</a>
