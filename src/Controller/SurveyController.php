@@ -60,14 +60,6 @@ class SurveyController extends AbstractController
     }
 
     /**
-<<<<<<< HEAD
-     * @Route("/surveys/{id}", name="survey_response", requirements={"id"="\d+"})
-     */
-    public function showSurvey(Survey $survey){
-        $survey->questions = 'asdf';
-        return $this->render("survey/response/form.html.twig", [
-            "survey" => $survey
-=======
      * @Route("surveys/{id}", name="surveys_response", requirements={"id"="\d+"})
      */
     public function surveyResponse(Request $request, Survey $survey){
@@ -99,7 +91,6 @@ class SurveyController extends AbstractController
             "survey" => $survey,
             "questions" => $survey->getSurveyTemplate()->getQuestions(),
             "responses" => $survey->getSurveyResponses()
->>>>>>> master
         ]);
     }
 }
