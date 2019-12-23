@@ -44,7 +44,6 @@ class SurveyController extends AbstractController
                 $entityManager->flush();
                 $survey_handler->generateResponses($s, $entityManager);
             }
-
             return $this->redirectToRoute("surveys_list");
         }
         
@@ -62,9 +61,10 @@ class SurveyController extends AbstractController
         $form->add('survey', SurveyType::class);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted()){
+        if ($form->isSubmitted() && $form->isValid()){
             $entityManager = $this->getDoctrine()->getManager();
-            // get current all response ids
+            $entityManager->persist($survey);
+
             $surveyTemplate_responseIds = [];
             foreach ($survey->getSurveyResponses() as $response){
                 $surveyTemplate_responseIds[] = $response->getId();
@@ -74,6 +74,7 @@ class SurveyController extends AbstractController
                 }
             }
 
+            $entityManager->persist($survey);
             $entityManager->flush();
             return $this->redirectToRoute('surveys_list');
         }

@@ -40,9 +40,9 @@ class Survey
     private $organization;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $closed;
+    private $status;
 
     public function __construct()
     {
@@ -121,14 +121,14 @@ class Survey
         return $this;
     }
 
-    public function getClosed(): ?\DateTimeInterface
+    public function getStatus(): ?int
     {
-        return $this->closed;
+        return $this->status;
     }
 
-    public function setClosed(?\DateTimeInterface $closed): self
+    public function setStatus(?int $status): self
     {
-        $this->closed = $closed;
+        $this->status = $status;
 
         return $this;
     }

@@ -16,12 +16,6 @@ class SurveyResponseType extends AbstractType
     {
         $builder
             ->add('answer')
-            ->add('survey', EntityType::class, [
-                'class' => Survey::class,
-                'choice_label' => function($s) {
-                    return $s->getSurveyTemplate()->getName();
-                }
-            ])
             ->add('question', EntityType::class, [
                 'class' => Question::class,
                 'choice_label' => function($q) {
