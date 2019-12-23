@@ -37,6 +37,7 @@ class SurveyType extends AbstractType
                 'multiple' => true
             ])
             ->add('status', ChoiceType::class, [
+                'label' => 'Survey Status',
                 'choices' => $this->surveyHandler->getSurveyStatusTypes()
             ])
         ;
