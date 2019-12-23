@@ -29,8 +29,10 @@
 					
 					{% endif %}
 				{% endfor %}
+
+				{{ form_row(form.survey.closed)}}
 				<input type="submit" value="submit">
-			{{form_end(form)}}
+				{{form_end(form, {'render_rest': false})}}
 		</div>
 	</div>
 </div>

@@ -39,6 +39,11 @@ class Survey
      */
     private $organization;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $closed;
+
     public function __construct()
     {
         $this->surveyResponses = new ArrayCollection();
@@ -112,6 +117,18 @@ class Survey
     public function setOrganization(?Organization $organization): self
     {
         $this->organization = $organization;
+
+        return $this;
+    }
+
+    public function getClosed(): ?\DateTimeInterface
+    {
+        return $this->closed;
+    }
+
+    public function setClosed(?\DateTimeInterface $closed): self
+    {
+        $this->closed = $closed;
 
         return $this;
     }

@@ -2,18 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Question;
 use App\Entity\Survey;
 use App\Entity\SurveyResponse;
 use App\Form\SurveyResponseType;
 use App\Form\SurveyType;
-use App\Repository\SurveyResponseRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\Survey\SurveyHandler;
@@ -65,9 +59,7 @@ class SurveyController extends AbstractController
     public function surveyResponse(Request $request, Survey $survey){
 
         $form = $this->createForm(SurveyResponseType::class, new SurveyResponse());
-        $form->remove('survey');
-        $form->remove('question');
-        $form->remove('answer');
+        $form->add('survey', SurveyType::class);
 
         $form->handleRequest($request);
         if ($form->isSubmitted()){

@@ -52,7 +52,9 @@ class OrganizationController extends AbstractController {
         ]);
 
         return $this->render("organization/surveys.html.twig", [
-           "surveys" => $organizationSurveys 
+           "open_surveys" => $organizationSurveys,
+        //    "open_surveys" => $organizationSurveys->getOpenSurveys(),
+        //    "closed_surveys" => $organization->getClosedSurveys(),
         ]);
     }
 }

@@ -5,8 +5,11 @@ namespace App\Form;
 use App\Entity\Organization;
 use App\Entity\Survey;
 use App\Entity\SurveyTemplate;
+use DateTimeZone;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -30,6 +33,7 @@ class SurveyType extends AbstractType
                 'mapped' => false,
                 'multiple' => true
             ])
+            ->add('closed')
         ;
     }
 
