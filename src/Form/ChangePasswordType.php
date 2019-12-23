@@ -13,28 +13,20 @@ use App\Entity\User;
 class ChangePasswordType extends AbstractType{
 	public function buildForm(FormBuilderInterface $builder, array $options){
 		$builder
-			->add('password', PasswordType::class, [
-				'mapped'=>false,
+			->add('oldPassword', PasswordType::class, [
 				'label'=>'Current Password'
 			])
-			->add('new_password', RepeatedType::class, [
+			->add('newPassword', RepeatedType::class, [
 				'type'=>PasswordType::class,
-				'invalid_message'=>'The new password must be entered twice.',
+				'invalid_message'=>'The new password must be correctly entered twice.',
 				'options'=>[
 					'attr'=>['class'=>'password-field']
 				],
 				'required'=>true,
 				'first_options'=>['label'=>'New Password'],
-				'second_options'=>['label'=>'Repeat New Password'],
-				'mapped'=>false
+				'second_options'=>['label'=>'Repeat New Password']
 			])
 			->add('save', SubmitType::class)
 		;
-	}
-
-	public function configureOptions(OptionsResolver $resolver){
-		$resolver->setDefaults([
-			'data_class'=>User::class
-		]);
 	}
 }

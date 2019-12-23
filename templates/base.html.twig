@@ -9,41 +9,57 @@
     </head>
     <body>
         {% block navbar %}
-        <nav class="navbar navbar-expand-lg">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a href="/" class="nav-link">Home</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" id="navQuestionsDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Organizations</a>
-                        <div class="dropdown-menu" aria-labelledby="navQuestionsDropdownMenuLink">
-                            <a href="{{path('organizations_list')}}" class="dropdown-item">List</a>
-                            <a href="{{path('organizations_add')}}" class="dropdown-item">Create</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" id="navQuestionsDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Questions</a>
-                        <div class="dropdown-menu" aria-labelledby="navQuestionsDropdownMenuLink">
-                            <a href="{{path('questions_list')}}" class="dropdown-item">List</a>
-                            <a href="{{path('questions_create')}}" class="dropdown-item">Create</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" id="navSurveyTemplatesMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Survey Templates</a>
-                        <div class="dropdown-menu" aria-labelledby="navSurveyTemplatesMenuLink">
-                            <a href="{{path('survey_templates_list')}}" class="dropdown-item">List</a>
-                            <a href="{{path('survey_templates_create')}}" class="dropdown-item">Create</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" id="navSurveyTemplatesMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Surveys</a>
-                        <div class="dropdown-menu" aria-labelledby="navSurveyTemplatesMenuLink">
-                            <a href="{{path('surveys_list')}}" class="dropdown-item">List</a>
-                            <a href="{{path('surveys_add')}}" class="dropdown-item">Create</a>
-                        </div>
-                    </li>
-                </ul>
+                <div class="container">
+                    <ul class="navbar-nav">
+                        {% if app.user %}
+                            <li class="nav-item">
+                                <a href="/" class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" id="navQuestionsDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Organizations</a>
+                                <div class="dropdown-menu" aria-labelledby="navQuestionsDropdownMenuLink">
+                                    <a href="{{path('organizations_list')}}" class="dropdown-item">List</a>
+                                    <a href="{{path('organizations_add')}}" class="dropdown-item">Create</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" id="navQuestionsDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Questions</a>
+                                <div class="dropdown-menu" aria-labelledby="navQuestionsDropdownMenuLink">
+                                    <a href="{{path('questions_list')}}" class="dropdown-item">List</a>
+                                    <a href="{{path('questions_create')}}" class="dropdown-item">Create</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" id="navSurveyTemplatesMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Survey Templates</a>
+                                <div class="dropdown-menu" aria-labelledby="navSurveyTemplatesMenuLink">
+                                    <a href="{{path('survey_templates_list')}}" class="dropdown-item">List</a>
+                                    <a href="{{path('survey_templates_create')}}" class="dropdown-item">Create</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" id="navSurveyTemplatesMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Surveys</a>
+                                <div class="dropdown-menu" aria-labelledby="navSurveyTemplatesMenuLink">
+                                    <a href="{{path('surveys_list')}}" class="dropdown-item">List</a>
+                                    <a href="{{path('surveys_add')}}" class="dropdown-item">Create</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" id="navMyAccountMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">User</a>
+                                <div class="dropdown-menu" aria-labelledby="navMyAccountMenuLink">
+                                    <a href="{{path('account')}}" class="dropdown-item">My Account</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a href="{{path('app_logout')}}" class="dropdown-item text-danger">Log Out</a>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a href="{{path('app_login')}}" class="nav-link">Log in</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
         </nav>
         {% endblock %}
