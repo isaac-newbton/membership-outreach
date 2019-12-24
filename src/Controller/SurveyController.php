@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Survey;
 use App\Entity\SurveyResponse;
+use App\Entity\SurveyTemplate;
 use App\Form\SurveyResponseType;
 use App\Form\SurveyType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\Survey\SurveyHandler;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class SurveyController extends AbstractController
 {
@@ -56,14 +59,19 @@ class SurveyController extends AbstractController
      * @Route("surveys/{id}", name="surveys_response", requirements={"id"="\d+"})
      */
     public function surveyResponse(Request $request, Survey $survey){
-
         $form = $this->createForm(SurveyResponseType::class, new SurveyResponse());
-        $form->add('survey', SurveyType::class);
+        $form->add('survey', SurveyType::class, [
+            'data' => $survey,
+        ]);
+
+        $surveyTemplate = $survey->getSurveyTemplate(); // FIXME: this isn't availaable after $form->handleRequest() ... don't know why !!
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()){
-            $entityManager = $this->getDoctrine()->getManager();
 
+            $survey->setSurveyTemplate($surveyTemplate); // FIXME: need to manually set this value or we get a big red error
+
+            $entityManager = $this->getDoctrine()->getManager();
             $surveyTemplate_responseIds = [];
             foreach ($survey->getSurveyResponses() as $response){
                 $surveyTemplate_responseIds[] = $response->getId();
@@ -72,8 +80,7 @@ class SurveyController extends AbstractController
                     $entityManager->persist($response);
                 }
             }
-            $survey->setStatus($form->get('survey')->get('status')->getData());
-            $entityManager->persist($survey);
+            // $entityManager->persist($survey);
             $entityManager->flush();
             return $this->redirectToRoute('surveys_list');
         }

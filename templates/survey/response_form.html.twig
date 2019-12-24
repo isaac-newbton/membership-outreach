@@ -23,7 +23,7 @@
 					{% elseif response.question.type == 5 %}
 					<select name="{{response.id}}" id="">
 						{% for option in response.question.options|split(',') %}
-							<option value="{{option}}">{{option}}</option>
+							<option {{ option == response.answer ? 'selected'}} value="{{option}}">{{option}}</option>
 						{% endfor %}
 					</select>
 					
@@ -31,6 +31,7 @@
 				{% endfor %}
 
 				{{ form_row(form.survey.status)}}
+
 				{{ form_row(form._token) }}
 				<input type="submit" value="submit">
 				{{form_end(form, {'render_rest': false})}}
