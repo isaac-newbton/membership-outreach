@@ -39,6 +39,11 @@ class Survey
      */
     private $organization;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $status;
+
     public function __construct()
     {
         $this->surveyResponses = new ArrayCollection();
@@ -112,6 +117,18 @@ class Survey
     public function setOrganization(?Organization $organization): self
     {
         $this->organization = $organization;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

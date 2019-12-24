@@ -7,6 +7,16 @@ use Doctrine\ORM\EntityManager;
 
 class SurveyHandler{
 
+    const STATUS_OPEN = 1;
+    const STATUS_CLOSED = 2;
+
+    public function getSurveyStatusTypes(){
+        return [
+            'open' => self::STATUS_OPEN,
+            'closed' => self::STATUS_CLOSED,
+        ];
+    }
+
 	public function generateResponses(Survey $survey, EntityManager $entity_manager){
 		$questions = $survey->getSurveyTemplate()->getQuestions();
 		if($questions){
