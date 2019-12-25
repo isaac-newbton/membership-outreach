@@ -1,12 +1,18 @@
 {% extends "base.html.twig" %}
 {% block body %}
 	<div class="container">
-		<div class="row">
-			<h1>Survey Templates</h1>
-			{% for template in templates %}
-			{{template.id}}
-			{{template.name}}
-			{% endfor %}
+		<div class="row py-4">
+			<div class="col">
+				<h1>Survey Templates</h1>
+				<ul class="list-group">
+					{% for template in templates %}
+					<li class="list-group-item">
+						{{template.id}}
+						{{template.name}}
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
 		</div>
 	</div>
 {% endblock %}

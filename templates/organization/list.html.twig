@@ -2,12 +2,24 @@
 
 {% block body %}
 <div class="container">
-    <div class="row">
+    <div class="row py-4">
         <div class="col">
             <ul class="list-group">
                 {% for organization in organizations %}
+
+                {# get the open survey count #}
+                {% set openSurveys = 0 %}
+                {% for survey in organization.surveys %}
+                    {% if survey.status != 2 %}
+                        {% set openSurveys = openSurveys + 1 %}
+                    {% endif %}
+                {% endfor %}
+
                 <li class="list-group-item">
                     <a href="{{path("organization_surveys", {id: organization.id})}}">{{ organization.name }}</a>
+                    {% if openSurveys > 0 %}
+                    <span class="float-right badge badge-primary">{{ openSurveys }} Open Survey(s)</span>
+                    {% endif %}
                 </li>    
                 {% endfor %}
             </ul>
