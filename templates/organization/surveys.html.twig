@@ -3,7 +3,7 @@
 {% block body %}
 <div class="container">
 	<div class="row">
-		{% for survey in active_surveys %}
+		{% for survey in open_surveys %}
 			<div class="col">
 				<a href="{{ path("surveys_response", {id: survey.id}) }}">{{ survey.surveyTemplate.name }}</a>
 			</div>
