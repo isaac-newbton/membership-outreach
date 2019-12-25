@@ -10,6 +10,7 @@ class DashboardController extends AbstractController{
 	 * @Route("/dashboard", name="dashboard")
 	 */
 	public function dashboard(){
-		return $this->render("dashboard.html.twig");
+		// return $this->render("dashboard.html.twig");
+		return $this->redirectToRoute("surveys_list");
 	}
 }

@@ -4,11 +4,14 @@
 <div class="container">
 	<div class="row py-4">
 		<div class="col">
-			{% for survey in open_surveys %}
+
+			<h3 class="py-3">Surveys for {{ organization.name }}</h3>
+			
+			{% for survey in surveys %}
 			<ul class="list-group">
 				<li class="list-group-item">
 					<a href="{{ path("surveys_response", {id: survey.id}) }}">
-						<span class="badge badge-{{ survey.status == 2 ? 'secondary' : 'primary' }}">{{ survey.status == 2 ? 'closed' : 'open' }}</span>
+						<span class="badge badge-{{ survey.status == 2 ? 'secondary' : 'success' }}">{{ survey.status == 2 ? 'closed' : 'open' }}</span>
 						{{ survey.surveyTemplate.name }}
 					</a>
 				</li>

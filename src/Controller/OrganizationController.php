@@ -48,13 +48,12 @@ class OrganizationController extends AbstractController {
      */
     public function showOrganizationSurveys(Organization $organization){
         $organizationSurveys = $this->getDoctrine()->getRepository(Survey::class)->findBy([
-            'organization' => $organization
+            'organization' => $organization,
         ]);
 
         return $this->render("organization/surveys.html.twig", [
-           "open_surveys" => $organizationSurveys,
-        //    "open_surveys" => $organizationSurveys->getOpenSurveys(),
-        //    "closed_surveys" => $organization->getClosedSurveys(),
+            "organization" => $organization,
+            "surveys" => $organizationSurveys,
         ]);
     }
 }

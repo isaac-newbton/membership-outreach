@@ -4,11 +4,19 @@
 <div class="container">
 	<div class="row py-4">
 		<div class="col">
+
+			<h3 class="py-3">Viewing Surveys</h3>
+
+			<div class="btn-group">
+				<a href="{{ path("surveys_list") }}" class="my-2 btn btn-success btn-sm">Open</a>
+				<a href="{{ path("surveys_closed_list") }}" class="my-2 btn btn-light btn-sm">Closed</a>
+			</div>
+
 			<ul class="list-group">
 				{% for survey in surveys %}
 					<li class="list-group-item">
-						<span class="badge badge-{{ survey.status == 2 ? 'secondary' : 'primary' }}">{{ survey.status == 2 ? 'closed' : 'open' }}</span>
-						<a href="{{ path("surveys_response", { id: survey.id }) }}">{{ survey.surveyTemplate.name }} | <strong>{{survey.organization.name}}</strong></a>
+						<span class="badge badge-{{ survey.status == 2 ? 'secondary' : 'success' }}">{{ survey.status == 2 ? 'closed' : 'open' }}</span>
+						<a href="{{ path("surveys_response", { id: survey.id }) }}">{{ survey.surveyTemplate.name }}</a> | <a class="font-weight-bold" href="{{ path("organization_surveys", {id: survey.organization.id}) }}">{{survey.organization.name}}</a>
 						<a href="" class=" btn btn-link text-danger float-right">Delete</a>
 						<a href="" class="btn text-secondary float-right">Close Survey</a>
 					</li>
