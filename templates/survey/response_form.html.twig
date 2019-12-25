@@ -5,29 +5,44 @@
 		<div class="col">
 			{{form_start(form)}}
 				{% for response in responses %}
+				<div class="form-group">
 					<label for="{{response.id}}">{{response.question.question}}</label>
-
+					
 					{% if response.question.type == 1 %}
-						<input type="text" name="{{response.id}}" id="" value="{{response.answer|default('')}}">
-
+					<input class="form-control" type="text" name="{{response.id}}" id="" value="{{response.answer|default('')}}">
+					
 					{% elseif response.question.type == 2 %}
-						<textarea name="{{response.id}}" id="" value="{{response.answer|default('')}}"></textarea>
-
+					<textarea class="form-control" name="{{response.id}}" id="" value="{{response.answer|default('')}}"></textarea>
+					
 					{% elseif response.question.type == 3 %}
-						<input type='number' name="{{response.id}}" id="" value="{{response.answer|default('')}}">
-
+					<input class="form-control" type='number' name="{{response.id}}" id="" value="{{response.answer|default('')}}">
+					
 					{% elseif response.question.type == 4 %}
-						<input type='radio' name="{{response.id}}" id="" value="true">
-						<input type='radio' name="{{response.id}}" id="" value="false">
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="{{response.id}}" value="true">
+						<label class="form-check-label" for="{{response.id}}">
+						  True
+						</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="{{response.id}}" value="false">
+						<label class="form-check-label" for="{{response.id}}">
+						  False
+						</label>
+					</div>
 
+					{# <input type='radio' name="{{response.id}}" id="" value="true"> True
+					<input type='radio' name="{{response.id}}" id="" value="false"> False #}
+					
 					{% elseif response.question.type == 5 %}
-					<select name="{{response.id}}" id="">
+					<select name="{{response.id}}" class="form-control">
 						{% for option in response.question.options|split(',') %}
-							<option {{ option == response.answer ? 'selected'}} value="{{option}}">{{option}}</option>
+						<option {{ option == response.answer ? 'selected'}} value="{{option}}">{{option}}</option>
 						{% endfor %}
 					</select>
-					
 					{% endif %}
+				</div>
+					
 				{% endfor %}
 
 				{{ form_row(form.survey.status)}}
