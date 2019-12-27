@@ -17,12 +17,6 @@ class Survey
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $dueDate;
-
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\SurveyResponse", mappedBy="survey", orphanRemoval=true)
      */
@@ -44,6 +38,11 @@ class Survey
      */
     private $status;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $dueDate;
+
     public function __construct()
     {
         $this->surveyResponses = new ArrayCollection();
@@ -52,18 +51,6 @@ class Survey
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getDueDate(): ?\DateTimeInterface
-    {
-        return $this->dueDate;
-    }
-
-    public function setDueDate(?\DateTimeInterface $dueDate): self
-    {
-        $this->dueDate = $dueDate;
-
-        return $this;
     }
 
     /**
@@ -129,6 +116,18 @@ class Survey
     public function setStatus(?int $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getDueDate(): ?\DateTimeInterface
+    {
+        return $this->dueDate;
+    }
+
+    public function setDueDate(?\DateTimeInterface $dueDate): self
+    {
+        $this->dueDate = $dueDate;
 
         return $this;
     }
