@@ -1,0 +1,23 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="container">
+<div class="row py-2"><h5>Tags</h5></div>
+<div class="row py-2"><a href="{{ path("tags_add") }}" class="btn btn-primary">Add Tag</a></div>
+	<div class="row py-4">
+		<div class="col">
+			{% for tag in tags %}
+			<ul class="list-group">
+				<li class="list-group-item my-1">
+					<div class="d-flex w-100 justify-content-between">
+						<h5 class="mb-1">{{ tag.name}}</h5>
+						<small>{{ tag.description|default(null)}}</small>
+					</div>
+				</li>
+			</ul>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+
+{% endblock %}

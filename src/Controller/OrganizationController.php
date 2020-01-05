@@ -33,6 +33,10 @@ class OrganizationController extends AbstractController {
         if ($form->isSubmitted() && $form->isValid()){
             $entityManager = $this->getDoctrine()->getManager();
             $organization = $form->getData();
+            $tags = $form->get('tags')->getData();
+            foreach ($tags as $tag){
+                $entityManager->persist($tag);
+            }
             $entityManager->persist($organization);
             $entityManager->flush();
             return $this->redirectToRoute("organizations_list");
@@ -45,8 +49,10 @@ class OrganizationController extends AbstractController {
 
     /**
      * @Route("organizations/{id}/surveys", name="organization_surveys", requirements={"id"="\d+"})
+     * @
      */
-    public function showOrganizationSurveys(Organization $organization){
+    public function showOrganizationSurveys(int $id){
+        $organization = $this->getDoctrine()->getRepository(Organization::class)->find($id);
         $organizationSurveys = $this->getDoctrine()->getRepository(Survey::class)->findBy([
             'organization' => $organization,
         ]);
