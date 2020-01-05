@@ -53,17 +53,30 @@ class SurveyController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()){
+            $organizations = [];
             $entityManager = $this->getDoctrine()->getManager();
 
             $survey = $form->getData();
             $survey->setStatus(1);
-            foreach ($form->get('organization')->getData() as $o){
-                $s = clone $survey;
-                $s->setOrganization($o);
-                $entityManager->persist($s);
-                $entityManager->flush();
-                $survey_handler->generateResponses($s, $entityManager);
+
+            foreach ($form->get('tags')->getData() as $t){
+                // get all organizations from matching tags - make sure there are no dupes
+                foreach($t->getOrganizations() as $o){
+                    if (!in_array($o, $organizations, true)) $organizations[] = $o;
+                }
             }
+
+            foreach ($organizations as $o){
+                $s = clone $survey;
+
+                    $s->setOrganization($o);
+                    $entityManager->persist($s);
+                    $entityManager->flush();
+                    $survey_handler->generateResponses($s, $entityManager);
+                // }
+
+            }
+
             return $this->redirectToRoute("surveys_list");
         }
         

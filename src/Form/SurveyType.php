@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Organization;
 use App\Entity\Survey;
 use App\Entity\SurveyTemplate;
+use App\Entity\Tag;
 use App\Service\Survey\SurveyHandler;
 use DateTimeZone;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -28,13 +29,16 @@ class SurveyType extends AbstractType
                     return $st->getName();
                 },
             ])
-            ->add('organization', EntityType::class, [
-                'class' => Organization::class,
-                'choice_label' => function($o) {
-                    return $o->getName();
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'choice_label' => function($t) {
+                    return $t->getName();
                 },
                 'mapped' => false,
-                'multiple' => true
+                'multiple' => true,
+                'expanded' => true,
+                'label' => "Organizations",
+                'help' => "Surveys will be created for all Organizations matching the selected tags"
             ])
             ->add('status', ChoiceType::class, [
                 'label' => 'Survey Status',
