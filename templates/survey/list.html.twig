@@ -2,6 +2,17 @@
 
 {% block body %}
 <div class="container">
+	<div class="row my-3">
+		<div class="col">
+		{% for flashMessage in app.session.flashbag.get('message') %}
+
+		<div class="badge badge-success">
+			{{ flashMessage }}
+		</div>
+
+		{% endfor %}
+		</div>
+	</div>
 	<div class="row py-4">
 		<div class="col">
 
@@ -17,7 +28,7 @@
 					<li class="list-group-item">
 						<span class="badge badge-{{ survey.status == 2 ? 'secondary' : 'success' }}">{{ survey.status == 2 ? 'closed' : 'open' }}</span>
 						<a href="{{ path("surveys_response", { id: survey.id }) }}">{{ survey.surveyTemplate.name }}</a> | <a class="font-weight-bold" href="{{ path("organization_surveys", {id: survey.organization.id}) }}">{{survey.organization.name}}</a>
-						<a href="" class=" btn btn-link text-danger float-right">Delete</a>
+						<a href="{{ path("surveys_delete", {id: survey.id}) }}" class=" btn btn-link text-danger float-right">Delete</a>
 						<a href="" class="btn text-secondary float-right">Close Survey</a>
 					</li>
 				{% endfor %}

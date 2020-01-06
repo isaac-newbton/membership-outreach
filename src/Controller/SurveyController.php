@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Service\Survey\SurveyHandler;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class SurveyController extends AbstractController
 {
@@ -28,6 +29,19 @@ class SurveyController extends AbstractController
         return $this->render("survey/list.html.twig", [
             "surveys" => $surveys
         ]);
+    }
+
+    /**
+     * @Route("/surveys/delete/{id}", name="surveys_delete", requirements={"id"="\d+"})
+     */
+    public function deleteSurvey(Survey $survey, Session $session){
+        if ($survey){
+            $entityManager = $this->getDoctrine()->getManager();
+            $session->getFlashBag()->add('message', "Survey deleted ({$survey->getSurveyTemplate()->getName()} - {$survey->getOrganization()->getName()})");
+            $entityManager->remove($survey);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute("surveys_list");
     }
 
     /**
