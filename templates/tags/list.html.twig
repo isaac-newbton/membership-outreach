@@ -2,6 +2,17 @@
 
 {% block body %}
 <div class="container">
+<div class="row my-3">
+	<div class="col">
+	{% for flashMessage in app.session.flashbag.get('message') %}
+
+	<div class="badge badge-success">
+		{{ flashMessage }}
+	</div>
+
+	{% endfor %}
+	</div>
+</div>
 <div class="row py-2"><h5>Tags</h5></div>
 <div class="row py-2"><a href="{{ path("tags_add") }}" class="btn btn-primary">Add Tag</a></div>
 	<div class="row py-4">
@@ -10,7 +21,10 @@
 			<ul class="list-group">
 				<li class="list-group-item my-1">
 					<div class="d-flex w-100 justify-content-between">
-						<h5 class="mb-1">{{ tag.name}}</h5>
+						<h5 class="mb-1">{{ tag.name}}
+						<a href="{{ path("tags_edit", {id: tag.id}) }}" class="btn btn-link text-secondary">Edit</a>
+						<a onClick="return confirm('Are you sure you want to delete the tag {{tag.name}}?')" href="{{ path("tags_delete", {id: tag.id}) }}" class="btn btn-link text-danger">Delete</a>
+						</h5>
 						<small>{{ tag.description|default(null)}}</small>
 					</div>
 				</li>
