@@ -8,6 +8,7 @@ use App\Form\OrganizationType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 class OrganizationController extends AbstractController {
@@ -67,6 +68,22 @@ class OrganizationController extends AbstractController {
                 "form" => $form->createView()
             ]);
         }
+    }
+
+    /**
+     * @Route("/organizations/delete/{id}", name="organizations_delete", requirements={"id":"\d+"})
+     */
+    public function deleteOrganization(Session $session, Organization $organization){
+        if ($organization){
+            $session->getFlashBag()->add('message', "Deleted organization '{$organization->getName()}' and all related surveys");
+            $entityManager = $this->getDoctrine()->getManager();
+            foreach($organization->getSurveys() as $survey){
+                $entityManager->remove($survey);
+            }
+            $entityManager->remove($organization);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute("organizations_list");
     }
 
     /**

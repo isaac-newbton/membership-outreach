@@ -2,6 +2,17 @@
 
 {% block body %}
 <div class="container">
+	<div class="row my-3">
+		<div class="col">
+		{% for flashMessage in app.session.flashbag.get('message') %}
+
+		<div class="badge badge-success">
+			{{ flashMessage }}
+		</div>
+
+		{% endfor %}
+		</div>
+	</div>
     <div class="row py-4">
         <div class="col">
             <ul class="list-group">
@@ -18,6 +29,7 @@
                 <li class="list-group-item">
                     <a href="{{path("organization_surveys", {id: organization.id})}}">{{ organization.name }}</a>
                     <a href="{{ path("organizations_edit", {id: organization.id}) }}" class="btn btn-link text-secondary">Edit</a>
+                    <a onClick='return confirm("This will delete all open and closed surveys ({{ organization.surveys|length() }}) for this organization. Are you sure you want to proceed?")' href="{{ path("organizations_delete", {id: organization.id}) }}" class="btn btn-link text-danger">Delete</a>
                     {% if openSurveys > 0 %}
                     <span class="float-right badge badge-primary">{{ openSurveys }} Open Survey(s)</span>
                     {% endif %}
