@@ -48,6 +48,28 @@ class OrganizationController extends AbstractController {
     }
 
     /**
+     * @Route("/organizations/edit/{id}", name="organizations_edit", requirements={"id":"\d+"})
+     */
+    public function editOrganization(Organization $organization, Request $request){
+        if ($organization){
+            $form = $this->createForm(OrganizationType::class, $organization);
+
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()){
+                $organization = $form->getData();
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($organization);
+                $entityManager->flush();
+                return $this->redirectToRoute("organizations_list");
+            }
+
+            return $this->render("organization/form.html.twig", [
+                "form" => $form->createView()
+            ]);
+        }
+    }
+
+    /**
      * @Route("organizations/{id}/surveys", name="organization_surveys", requirements={"id"="\d+"})
      * @
      */
