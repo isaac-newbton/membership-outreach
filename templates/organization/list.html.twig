@@ -17,6 +17,7 @@
 
                 <li class="list-group-item">
                     <a href="{{path("organization_surveys", {id: organization.id})}}">{{ organization.name }}</a>
+                    <a href="{{ path("organizations_edit", {id: organization.id}) }}" class="btn btn-link text-secondary">Edit</a>
                     {% if openSurveys > 0 %}
                     <span class="float-right badge badge-primary">{{ openSurveys }} Open Survey(s)</span>
                     {% endif %}

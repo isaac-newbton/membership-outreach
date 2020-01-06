@@ -27,7 +27,8 @@ class OrganizationType extends AbstractType
                 },
                 'multiple' => true,
                 'expanded' => true,
-                'allow_extra_fields' => true
+                'allow_extra_fields' => true,
+                'help' => "Adding/removing tags will not affect previously generated surveys"
             ])
         ;
     }
