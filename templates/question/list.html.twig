@@ -2,14 +2,26 @@
 
 {% block body %}
 <div class="container">
+	<div class="row my-3">
+		<div class="col">
+		{% for flashMessage in app.session.flashbag.get('message') %}
+
+		<div class="badge badge-success">
+			{{ flashMessage }}
+		</div>
+
+		{% endfor %}
+		</div>
+	</div>
 	<div class="row py-4">
 		<div class="col">
 			{% for question in questions %}
 			<ul class="list-group">
 				<li class="list-group-item my-1">
-					<div class="d-flex w-100 justify-content-between">
-						<h5 class="mb-1">{{ question.question}}</h5>
-						<small>ID: {{ question.id}}</small>
+					<div class="d-flex w-100">
+						<h5 class="mb-1">{{ question.question}}
+						<a onClick="return confirm('This will delete this question from {{question.surveyResponses|length()}} survey response(s) and {{question.surveyTemplates|length()}} survey template(s). This cannot be undone. Are you sure you want to proceed?')" href="{{path("questions_delete", {id: question.id})}}" class="btn btn-link text-danger">Delete</a>
+						</h5>
 					</div>
 					<small>{{ question.options}}</small>
 				</li>

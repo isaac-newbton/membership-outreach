@@ -9,6 +9,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+
 
 class QuestionController extends AbstractController {
 
@@ -48,12 +50,13 @@ class QuestionController extends AbstractController {
     /**
      * @Route("/questions/delete/{id}", name="questions_delete", requirements={"id"="\d+"})
      */
-    public function deleteQuestion(int $id){
+    public function deleteQuestion(Session $session, int $id){
         
         $entityManager = $this->getDoctrine()->getManager();
         $question = $entityManager->getRepository(Question::class)->find($id);
 
         if ($question) {
+            $session->getFlashBag()->add('message', "Deleted question: {$question->getQuestion()}");
             $entityManager->remove($question);
             $entityManager->flush();
         } else {
