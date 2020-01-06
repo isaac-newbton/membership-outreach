@@ -1,6 +1,15 @@
 {% extends "base.html.twig" %}
 {% block body %}
 	<div class="container">
+		<div class="row my-3">
+			<div class="col">
+			{% for flashMessage in app.session.flashbag.get('message') %}
+				<div class="badge badge-success">
+					{{ flashMessage }}
+				</div>
+			{% endfor %}
+			</div>
+		</div>
 		<div class="row py-4">
 			<div class="col">
 				<h1>Survey Templates</h1>
@@ -9,6 +18,7 @@
 					<li class="list-group-item">
 						{{template.id}}
 						{{template.name}}
+						<a onClick="return confirm('This will also delete ALL {{ template.surveys|length() }} (open and closed) surveys for this template. Are you sure you want to proceed?')" href="{{ path("survey_templates_delete", {id: template.id}) }}" class="btn btn-link text-danger float-right">Delete</a>
 					</li>
 					{% endfor %}
 				</ul>
