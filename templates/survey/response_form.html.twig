@@ -61,6 +61,17 @@
 	<div class="col-sm-12 col-md-4">
 		<div class="row">
 			<div class="col-12">
+				<h5>{{ organization.contactPerson }}</h5>
+				<li>
+					Ph: {{ organization.contactPhoneNumber }}
+				</li>
+				<li>
+					Em: {{ organization.contactEmail }}
+				</li>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
 				<h5>Add Notes</h5>
 				{{ form(contactActionForm) }}
 			</div>

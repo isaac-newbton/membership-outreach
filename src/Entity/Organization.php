@@ -38,6 +38,21 @@ class Organization
      */
     private $tags;
 
+    /**
+     * @ORM\Column(type="string", length=30, nullable=true)
+     */
+    private $contactPhoneNumber;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $contactPerson;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $contactEmail;
+
     public function __construct()
     {
         $this->surveys = new ArrayCollection();
@@ -126,6 +141,42 @@ class Organization
         if ($this->tags->contains($tag)) {
             $this->tags->removeElement($tag);
         }
+
+        return $this;
+    }
+
+    public function getContactPhoneNumber(): ?string
+    {
+        return $this->contactPhoneNumber;
+    }
+
+    public function setContactPhoneNumber(?string $contactPhoneNumber): self
+    {
+        $this->contactPhoneNumber = $contactPhoneNumber;
+
+        return $this;
+    }
+
+    public function getContactPerson(): ?string
+    {
+        return $this->contactPerson;
+    }
+
+    public function setContactPerson(?string $contactPerson): self
+    {
+        $this->contactPerson = $contactPerson;
+
+        return $this;
+    }
+
+    public function getContactEmail(): ?string
+    {
+        return $this->contactEmail;
+    }
+
+    public function setContactEmail(?string $contactEmail): self
+    {
+        $this->contactEmail = $contactEmail;
 
         return $this;
     }
