@@ -52,6 +52,7 @@ class Survey
     {
         $this->surveyResponses = new ArrayCollection();
         $this->contactActions = new ArrayCollection();
+        $this->status = 1;
     }
 
     public function getId(): ?int
