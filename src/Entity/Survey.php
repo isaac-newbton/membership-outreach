@@ -43,9 +43,15 @@ class Survey
      */
     private $dueDate;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ContactAction", mappedBy="survey")
+     */
+    private $contactActions;
+
     public function __construct()
     {
         $this->surveyResponses = new ArrayCollection();
+        $this->contactActions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -128,6 +134,37 @@ class Survey
     public function setDueDate(?\DateTimeInterface $dueDate): self
     {
         $this->dueDate = $dueDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ContactAction[]
+     */
+    public function getContactActions(): Collection
+    {
+        return $this->contactActions;
+    }
+
+    public function addContactAction(ContactAction $contactAction): self
+    {
+        if (!$this->contactActions->contains($contactAction)) {
+            $this->contactActions[] = $contactAction;
+            $contactAction->setSurvey($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContactAction(ContactAction $contactAction): self
+    {
+        if ($this->contactActions->contains($contactAction)) {
+            $this->contactActions->removeElement($contactAction);
+            // set the owning side to null (unless already changed)
+            if ($contactAction->getSurvey() === $this) {
+                $contactAction->setSurvey(null);
+            }
+        }
 
         return $this;
     }

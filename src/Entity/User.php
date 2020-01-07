@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -32,6 +34,16 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ContactAction", mappedBy="user")
+     */
+    private $contactActions;
+
+    public function __construct()
+    {
+        $this->contactActions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -109,5 +121,36 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection|ContactAction[]
+     */
+    public function getContactActions(): Collection
+    {
+        return $this->contactActions;
+    }
+
+    public function addContactAction(ContactAction $contactAction): self
+    {
+        if (!$this->contactActions->contains($contactAction)) {
+            $this->contactActions[] = $contactAction;
+            $contactAction->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContactAction(ContactAction $contactAction): self
+    {
+        if ($this->contactActions->contains($contactAction)) {
+            $this->contactActions->removeElement($contactAction);
+            // set the owning side to null (unless already changed)
+            if ($contactAction->getUser() === $this) {
+                $contactAction->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
