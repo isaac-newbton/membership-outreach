@@ -1,60 +1,81 @@
 {% extends "base.html.twig" %}
 {% block body %}
 <div class="container">
-	<div class="row my-4">
-		<div class="col">
+	<div class="row my-4 justify-content-between">
+	<div class="col-sm-12 col-md-6">
+		<div class="row">
+			<div class="col">
+				<h4><strong>{{ survey.surveyTemplate.name }}</strong> for {{ survey.organization.name }}</h4>
 
-			<h4 class='py-3'><strong>{{ survey.surveyTemplate.name }}</strong> for {{ survey.organization.name }}</h4>
+				{{form_start(surveyForm)}}
+					{% for response in responses %}
+					{# {{response.answer}} #}
+					<div class="form-group">
+						<label for="{{response.id}}">{{response.question.question}}</label>
+						
+						{% if response.question.type == 1 %}
+						<input class="form-control" type="text" name="{{response.id}}" id="" value="{{response.answer|default('')}}">
+						
+						{% elseif response.question.type == 2 %}
+						<textarea class="form-control" name="{{response.id}}" id="" value="{{response.answer|default('')}}"></textarea>
+						
+						{% elseif response.question.type == 3 %}
+						<input class="form-control" type='number' name="{{response.id}}" id="" value="{{response.answer|default('')}}">
+						
+						{% elseif response.question.type == 4 %}
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="{{response.id}}" {% if response.answer == 'true' %}checked{% endif %} value="true">
+							<label class="form-check-label" for="{{response.id}}">
+							True
+							</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="{{response.id}}" {% if response.answer == 'false' %}checked{% endif %} value="false">
+							<label class="form-check-label" for="{{response.id}}">
+							False
+							</label>
+						</div>
 
-			{{form_start(form)}}
-				{% for response in responses %}
-				{# {{response.answer}} #}
-				<div class="form-group">
-					<label for="{{response.id}}">{{response.question.question}}</label>
-					
-					{% if response.question.type == 1 %}
-					<input class="form-control" type="text" name="{{response.id}}" id="" value="{{response.answer|default('')}}">
-					
-					{% elseif response.question.type == 2 %}
-					<textarea class="form-control" name="{{response.id}}" id="" value="{{response.answer|default('')}}"></textarea>
-					
-					{% elseif response.question.type == 3 %}
-					<input class="form-control" type='number' name="{{response.id}}" id="" value="{{response.answer|default('')}}">
-					
-					{% elseif response.question.type == 4 %}
-					<div class="form-check">
-						<input class="form-check-input" type="radio" name="{{response.id}}" {% if response.answer == 'true' %}checked{% endif %} value="true">
-						<label class="form-check-label" for="{{response.id}}">
-						  True
-						</label>
+						{# <input type='radio' name="{{response.id}}" id="" value="true"> True
+						<input type='radio' name="{{response.id}}" id="" value="false"> False #}
+						
+						{% elseif response.question.type == 5 %}
+						<select name="{{response.id}}" class="form-control">
+							{% for option in response.question.options|split(',') %}
+							<option {{ option == response.answer ? 'selected'}} value="{{option}}">{{option}}</option>
+							{% endfor %}
+						</select>
+						{% endif %}
 					</div>
-					<div class="form-check">
-						<input class="form-check-input" type="radio" name="{{response.id}}" {% if response.answer == 'false' %}checked{% endif %} value="false">
-						<label class="form-check-label" for="{{response.id}}">
-						  False
-						</label>
-					</div>
+						
+					{% endfor %}
 
-					{# <input type='radio' name="{{response.id}}" id="" value="true"> True
-					<input type='radio' name="{{response.id}}" id="" value="false"> False #}
-					
-					{% elseif response.question.type == 5 %}
-					<select name="{{response.id}}" class="form-control">
-						{% for option in response.question.options|split(',') %}
-						<option {{ option == response.answer ? 'selected'}} value="{{option}}">{{option}}</option>
-						{% endfor %}
-					</select>
-					{% endif %}
-				</div>
-					
-				{% endfor %}
+					{{ form_row(surveyForm.survey.status)}}
 
-				{{ form_row(form.survey.status)}}
-
-				{{ form_row(form._token) }}
-				<input  class='btn btn-primary' type="submit" value="submit">
-				{{form_end(form, {'render_rest': false})}}
+					{{ form_row(surveyForm._token) }}
+					<input  class='btn btn-primary' type="submit" value="submit">
+					{{form_end(surveyForm, {'render_rest': false})}}
+			</div>
 		</div>
+	</div>
+	<div class="col-sm-12 col-md-4">
+		<div class="row">
+			<div class="col-12">
+				<h5>Add Notes</h5>
+				{{ form(contactActionForm) }}
+			</div>
+			<div class="col-12">
+				{% for contactAction in contactActions|reverse() %}
+					<div class="card my-1">
+						<div class="card-body bg-light">
+							<p>{{ contactAction.note }}</p>
+							<p class="small"><strong>{{ contactAction.user.email }}</strong> at {{ contactAction.timeStamp|date('m/d/y h:i')}}</p>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
 	</div>
 </div>
 {% endblock %}
