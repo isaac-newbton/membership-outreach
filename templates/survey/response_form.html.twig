@@ -8,6 +8,7 @@
 
 			{{form_start(form)}}
 				{% for response in responses %}
+				{# {{response.answer}} #}
 				<div class="form-group">
 					<label for="{{response.id}}">{{response.question.question}}</label>
 					
@@ -22,13 +23,13 @@
 					
 					{% elseif response.question.type == 4 %}
 					<div class="form-check">
-						<input class="form-check-input" type="radio" name="{{response.id}}" value="true">
+						<input class="form-check-input" type="radio" name="{{response.id}}" {% if response.answer == 'true' %}checked{% endif %} value="true">
 						<label class="form-check-label" for="{{response.id}}">
 						  True
 						</label>
 					</div>
 					<div class="form-check">
-						<input class="form-check-input" type="radio" name="{{response.id}}" value="false">
+						<input class="form-check-input" type="radio" name="{{response.id}}" {% if response.answer == 'false' %}checked{% endif %} value="false">
 						<label class="form-check-label" for="{{response.id}}">
 						  False
 						</label>
