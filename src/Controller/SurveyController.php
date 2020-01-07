@@ -161,7 +161,8 @@ class SurveyController extends AbstractController
             "contactActions" => $survey->getContactActions(),
             "survey" => $survey,
             "questions" => $survey->getSurveyTemplate()->getQuestions(),
-            "responses" => $survey->getSurveyResponses()
+            "responses" => $survey->getSurveyResponses(),
+            "organization" => $survey->getOrganization()
         ]);
     }
 }

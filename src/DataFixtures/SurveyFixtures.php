@@ -6,6 +6,7 @@ use App\Entity\Organization;
 use App\Entity\Question;
 use App\Entity\Survey;
 use App\Entity\SurveyTemplate;
+use App\Entity\Tag;
 use App\Service\Question\QuestionHandler;
 use App\Service\Survey\SurveyHandler;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -24,10 +25,25 @@ class SurveyFixtures extends Fixture
         $org1 = new Organization();
         $org1->setCustomId('DD-001-SURV');
         $org1->setName('Digi Dev, LLC');
+        $org1->setContactEmail('sales@digidev.io');
+        $org1->setContactPerson('Jon Zack');
+        $org1->setContactPhoneNumber('(888) 200-3110');
 
         $org2 = new Organization();
         $org2->setCustomId('FK-002-SURV');
         $org2->setName('FunnelKake');
+        $org2->setContactEmail('myhelp@funnelkake.co');
+        $org2->setContactPerson('J. Zack');
+        $org2->setContactPhoneNumber('888-200-3110');
+
+        $tag1 = new Tag();
+        $tag1->setName('Developer');
+
+        $tag2 = new Tag();
+        $tag2->setName('Marketing Company');
+
+        $org1->addTag($tag1);
+        $org2->addTag($tag2);
 
         $q1 = new Question();
         $q1->setQuestion('Pick the true option');
@@ -70,6 +86,8 @@ class SurveyFixtures extends Fixture
 
         $manager->persist($org1);
         $manager->persist($org2);
+        $manager->persist($tag1);
+        $manager->persist($tag2);
         $manager->persist($q1);
         $manager->persist($q2);
         $manager->persist($q3);
