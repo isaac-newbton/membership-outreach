@@ -15,7 +15,7 @@
 		<div class="col-sm-12 col-md-4">
 		<h5>Latest Notes</h5>
 			{% for survey in organization.surveys %}
-				{% for contactAction in survey.contactActions %}
+				{% for contactAction in survey.contactActions|reverse() %}
 					<div class="card my-1">
 					<card class="card-header">
 						<a href="{{path("surveys_response", {id: contactAction.survey.id} )}}">{{contactAction.survey.surveyTemplate.name}}</a>
