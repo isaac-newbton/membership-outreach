@@ -20,6 +20,9 @@ class OrganizationType extends AbstractType
             ->add('custom_id', TextType::class, [
                 'required' => false
             ])
+            ->add('contactPerson')
+            ->add('contactPhoneNumber')
+            ->add('contactEmail')
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
                 'choice_label' => function ($t) {

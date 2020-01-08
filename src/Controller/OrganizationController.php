@@ -54,6 +54,7 @@ class OrganizationController extends AbstractController {
     public function editOrganization(Organization $organization, Request $request){
         if ($organization){
             $form = $this->createForm(OrganizationType::class, $organization);
+            $form->add('submit', SubmitType::class);
 
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()){
