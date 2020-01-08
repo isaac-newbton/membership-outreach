@@ -124,13 +124,16 @@ class SurveyController extends AbstractController
             foreach ($survey->getSurveyResponses() as $response){
                 $surveyTemplate_responseIds[] = $response->getId();
                 if(isset($_POST[$response->getId()])){
+                    if (is_array($_POST[$response->getId()])){
+                        $_POST[$response->getId()] = implode(",", $_POST[$response->getId()]);
+                    }
                     $response->setAnswer($_POST[$response->getId()]);
                     $entityManager->persist($response);
                 }
             }
             // $entityManager->persist($survey);
             $entityManager->flush();
-            return $this->redirectToRoute('surveys_list');
+            // return $this->redirectToRoute('surveys_list');
         }
 
         $contactActionForm = $this->createForm(ContactActionType::class, new ContactAction());
