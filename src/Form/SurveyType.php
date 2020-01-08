@@ -37,7 +37,7 @@ class SurveyType extends AbstractType
                 'mapped' => false,
                 'multiple' => true,
                 'expanded' => true,
-                'label' => "Organizations",
+                'label' => "Companies",
                 'help' => "Surveys will be created for all Organizations matching the selected tags"
             ])
             ->add('status', ChoiceType::class, [

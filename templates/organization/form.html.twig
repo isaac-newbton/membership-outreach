@@ -2,11 +2,33 @@
 
 {% block body %}
 <div class="container-xl">
-	<div class="row py-4">
-		<div class="col">
-			<h1>Add/Edit Organization</h1>
-			{{ form(form) }}
+	<div class="row py-4 justify-content-between">
+		<div class="col-sm-12 col-md-6">
+			<div class="row">
+				<div class="col">
+					<h1>Add/Edit Company</h1>
+					{{ form(form) }}
+				</div>
+			</div>
 		</div>
+		{% if organization is defined %}
+		<div class="col-sm-12 col-md-4">
+		<h5>Latest Notes</h5>
+			{% for survey in organization.surveys %}
+				{% for contactAction in survey.contactActions|reverse() %}
+					<div class="card my-1">
+					<card class="card-header">
+						<a href="{{path("surveys_response", {id: contactAction.survey.id} )}}">{{contactAction.survey.surveyTemplate.name}}</a>
+					</card>
+						<div class="card-body bg-light">
+							<p>{{ contactAction.note }}</p>
+							<p class="small"><strong>{{ contactAction.user.email }}</strong> at {{ contactAction.timeStamp|date('m/d/y h:i')}}</p>
+						</div>
+					</div>
+				{% endfor %}
+			{% endfor %}
+		</div>
+		{% endif %}
 	</div>
 </div>
 {% endblock body %}
