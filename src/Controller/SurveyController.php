@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\ContactAction;
+use App\Entity\Email;
+use App\Entity\PhoneCall;
 use App\Entity\Survey;
 use App\Entity\SurveyResponse;
 use App\Entity\SurveyTemplate;
@@ -17,6 +19,7 @@ use App\Service\Survey\SurveyHandler;
 use DateTime;
 use DateTimeZone;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -137,6 +140,8 @@ class SurveyController extends AbstractController
         $contactActionForm->remove('user');
         $contactActionForm->remove('survey');
         $contactActionForm->remove('timestamp');
+        $contactActionForm->add('call', CheckboxType::class, ['mapped'=>false, 'required'=>false, 'label'=>'Call']);
+        $contactActionForm->add('email', CheckboxType::class, ['mapped'=>false, 'required'=>false, 'label'=>'Email']);
         $contactActionForm->add('submit', SubmitType::class);
 
         $contactActionForm->handleRequest($request);
@@ -147,6 +152,18 @@ class SurveyController extends AbstractController
             $contactAction->setTimestamp(new DateTime('now', new DateTimeZone('AMERICA/NEW_YORK')));
             $contactAction->setUser($this->getUser());
             $contactAction->setSurvey($survey);
+
+            if($contactActionForm->get('call')->getData()){
+                $phoneCall = new PhoneCall();
+                $phoneCall->setContactAction($contactAction);
+                $entityManager->persist($phoneCall);
+            }
+
+            if($contactActionForm->get('email')->getData()){
+                $email = new Email();
+                $email->setContactAction($contactAction);
+                $entityManager->persist($email);
+            }
 
             $entityManager->persist($contactAction);
             $entityManager->flush();
