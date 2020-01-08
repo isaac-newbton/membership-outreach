@@ -66,7 +66,8 @@ class OrganizationController extends AbstractController {
             }
 
             return $this->render("organization/form.html.twig", [
-                "form" => $form->createView()
+                "form" => $form->createView(),
+                "organization" => $organization
             ]);
         }
     }
