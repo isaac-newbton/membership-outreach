@@ -40,11 +40,13 @@
 						<input type='radio' name="{{response.id}}" id="" value="false"> False #}
 						
 						{% elseif response.question.type == 5 %}
-						<select name="{{response.id}}" class="form-control">
 							{% for option in response.question.options|split(',') %}
-							<option {{ option == response.answer ? 'selected'}} value="{{option}}">{{option}}</option>
+							<div class="form-check">
+								<input class="form-check-input" {{ option in response.answer ? 'checked'}} type="checkbox" name="{{response.id}}[]" value="{{option}}">
+								<label class="form-check-label">{{option}}</label>
+							</div>
+							{# <option {{ option == response.answer ? 'selected'}} value="{{option}}">{{option}}</option> #}
 							{% endfor %}
-						</select>
 						{% endif %}
 					</div>
 						
