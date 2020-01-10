@@ -4,12 +4,17 @@ namespace App\Controller;
 
 use App\Entity\Organization;
 use App\Entity\Survey;
+use App\Entity\Tag;
+use App\Form\ImportOrganizationType;
 use App\Form\OrganizationType;
+use App\Repository\OrganizationRepository;
+use App\Repository\TagRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class OrganizationController extends AbstractController {
 
@@ -101,6 +106,128 @@ class OrganizationController extends AbstractController {
         return $this->render("organization/surveys.html.twig", [
             "organization" => $organization,
             "surveys" => $organizationSurveys,
+        ]);
+    }
+
+    /**
+     * @Route("organizations/import", name="organizations_import")
+     */
+    public function import(Request $request, OrganizationRepository $org_repository, TagRepository $tag_repository){
+        $form = $this->createForm(ImportOrganizationType::class);
+        $form->add('submit', SubmitType::class);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()){
+            /**
+             * @var UploadedFile
+             */
+            $file = $form->get('file')->getData();
+            if($file){
+                if('csv'==strtolower($file->getClientOriginalExtension())){
+                    $fh = fopen($file->getRealPath(), 'r');
+                    $keys = fgetcsv($fh);
+                    $data = [];
+                    while($d = fgetcsv($fh)){
+                        $row = [];
+                        foreach($keys as $k=>$title){
+                            $value = $d[$k];
+                            $row[$title] = (empty($value) || "NULL"===$value) ? null : $value;
+                        }
+                        $data[] = $row;
+                    }
+                    fclose($fh);
+                    if(!empty($data)){
+                        $tag_code_map = [
+                            'A'=>'Affiliate',
+                            'C'=>'Contactor (US)',
+                            'CC'=>'Contractor (CA)',
+                            'OC'=>'Contractor (Overseas)',
+                            'M'=>'Manufacturer',
+                            'D'=>'Distributor',
+                            'G'=>'GPR Imaging',
+                            'CP'=>'Concrete Polishing',
+                            'RA'=>'Reciprocal Association',
+                            'FS'=>'Slab Sawing',
+                            'WL'=>'Wall Sawing',
+                            'WR'=>'Wire Sawing',
+                            'HS'=>'Hand Sawing',
+                            'CD'=>'Core Drilling',
+                            'GG'=>'Grooving/Grinding',
+                            'SD'=>'Delective Demolition',
+                            'GPR'=>'GPR Imaging',
+                            'NDT'=>'Non-destructive Testing',
+                            'SP'=>'Surface Prep',
+                            'SR'=>'Slurry Recycling',
+                            'SC'=>'Slurry Collection',
+                            'CR'=>'Concrete Recycling'
+                        ];
+                        $entityManager = $this->getDoctrine()->getManager();
+                        foreach($data as $_r){
+                            if(isset($_r['custom_id'])){
+                                //find org by custom_id
+                                $organization = $org_repository->findOneBy(['custom_id'=>$_r['custom_id']]);
+                                if(null==$organization) $organization = new Organization();
+                                if(isset($_r['custom_id'])) $organization->setCustomId($_r['custom_id']);
+                                if(isset($_r['name'])) $organization->setName($_r['name']);
+                                if(isset($_r['postal_code'])) $organization->setPostalCode($_r['postal_code']);
+                                if(isset($_r['contact_email'])) $organization->setContactEmail($_r['contact_email']);
+                                if(isset($_r['contact_firstname']) || isset($_r['contact_lastname'])){
+                                    $organization->setContactPerson((isset($_r['contact_firstname']) ? "{$_r['contact_firstname']} " : '') . $_r['contact_lastname'] ?? '');
+                                }
+                                if(isset($_r['directory_url'])) $organization->setDirectoryUrl($_r['directory_url']);
+                                if(isset($_r['street_address1'])) $organization->setStreetAddress1($_r['street_address1']);
+                                if(isset($_r['street_address2'])) $organization->setStreetAddress2($_r['street_address2']);
+                                if(isset($_r['city'])) $organization->setCity($_r['city']);
+                                if(isset($_r['contact_phone_number'])) $organization->setContactPhoneNumber($_r['contact_phone_number']);
+                                if(isset($_r['contact_fax'])) $organization->setContactFax($_r['contact_fax']);
+                                $tag_codes = [];
+                                if(isset($_r['category'])){
+                                    $category_codes = explode(',', $_r['category']);
+                                    if(!empty($category_codes)){
+                                        foreach($category_codes as $_c){
+                                            $_c = trim($_c, " \t\n\r\0\x0B2");
+                                            $tag_codes[] = $_c;
+                                        }
+                                    }
+                                }
+                                if(isset($_r['services'])){
+                                    $service_codes = explode(',', $_r['services']);
+                                    if(!empty($service_codes)){
+                                        foreach($service_codes as $_c){
+                                            $_c = trim($_c, " \t\n\r\0\x0B2");
+                                            if('CC'==$_c) $_c = 'Curb Cutting';
+                                            $tag_codes[] = $_c;
+                                        }
+                                    }
+                                }
+                                if(!empty($tag_codes)){
+                                    foreach($tag_codes as $_c){
+                                        if(''!=trim($_c)){
+                                            $tag_name = $tag_code_map[strtoupper($_c)] ?? $_c;
+                                            $tag = $tag_repository->findOneBy(['name'=>$tag_name]);
+                                            if(null==$tag){
+                                                $tag = new Tag();
+                                                $tag->setName($tag_name);
+                                                $entityManager->persist($tag);
+                                                $entityManager->flush();
+                                            }
+                                            $organization->addTag($tag);
+                                        }
+                                    }
+                                }
+                                $entityManager->persist($organization);
+                            }
+                        }
+                        $entityManager->flush();
+                    }
+                    $submitted = $data;
+                }
+            }
+        }
+
+        return $this->render('organization/import.html.twig', [
+            'form'=>$form->createView(),
+            'submitted'=>$submitted ?? false
         ]);
     }
 }
