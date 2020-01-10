@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Organization;
 use App\Entity\Survey;
 use App\Entity\Tag;
-use App\Form\ImportOrganizationType;
+use App\Form\ImportOrganizationsType;
 use App\Form\OrganizationType;
 use App\Repository\OrganizationRepository;
 use App\Repository\TagRepository;
@@ -113,7 +113,7 @@ class OrganizationController extends AbstractController {
      * @Route("organizations/import", name="organizations_import")
      */
     public function import(Request $request, OrganizationRepository $org_repository, TagRepository $tag_repository){
-        $form = $this->createForm(ImportOrganizationType::class);
+        $form = $this->createForm(ImportOrganizationsType::class);
         $form->add('submit', SubmitType::class);
 
         $form->handleRequest($request);
