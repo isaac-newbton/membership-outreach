@@ -53,6 +53,36 @@ class Organization
      */
     private $contactEmail;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $streetAddress1;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $streetAddress2;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $city;
+
+    /**
+     * @ORM\Column(type="string", length=30, nullable=true)
+     */
+    private $postalCode;
+
+    /**
+     * @ORM\Column(type="string", length=2048, nullable=true)
+     */
+    private $directoryUrl;
+
+    /**
+     * @ORM\Column(type="string", length=30, nullable=true)
+     */
+    private $contactFax;
+
     public function __construct()
     {
         $this->surveys = new ArrayCollection();
@@ -177,6 +207,78 @@ class Organization
     public function setContactEmail(?string $contactEmail): self
     {
         $this->contactEmail = $contactEmail;
+
+        return $this;
+    }
+
+    public function getStreetAddress1(): ?string
+    {
+        return $this->streetAddress1;
+    }
+
+    public function setStreetAddress1(?string $streetAddress1): self
+    {
+        $this->streetAddress1 = $streetAddress1;
+
+        return $this;
+    }
+
+    public function getStreetAddress2(): ?string
+    {
+        return $this->streetAddress2;
+    }
+
+    public function setStreetAddress2(?string $streetAddress2): self
+    {
+        $this->streetAddress2 = $streetAddress2;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(?string $postalCode): self
+    {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    public function getDirectoryUrl(): ?string
+    {
+        return $this->directoryUrl;
+    }
+
+    public function setDirectoryUrl(?string $directoryUrl): self
+    {
+        $this->directoryUrl = $directoryUrl;
+
+        return $this;
+    }
+
+    public function getContactFax(): ?string
+    {
+        return $this->contactFax;
+    }
+
+    public function setContactFax(?string $contactFax): self
+    {
+        $this->contactFax = $contactFax;
 
         return $this;
     }

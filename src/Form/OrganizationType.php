@@ -20,9 +20,21 @@ class OrganizationType extends AbstractType
             ->add('custom_id', TextType::class, [
                 'required' => false
             ])
+            ->add('directoryUrl', TextType::class, [
+                'label' => 'Website'
+            ])
             ->add('contactPerson')
             ->add('contactPhoneNumber')
             ->add('contactEmail')
+            ->add('contactFax')
+            ->add('streetAddress1', TextType::class, [
+                'label' => 'Street address (line 1)'
+            ])
+            ->add('streetAddress2', TextType::class, [
+                'label' => 'Street address (line 2)'
+            ])
+            ->add('city')
+            ->add('postalCode')
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
                 'choice_label' => function ($t) {

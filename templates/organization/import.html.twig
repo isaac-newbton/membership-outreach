@@ -1,0 +1,34 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="container">
+	<div class="row">
+		<div class="col">
+			<h1>Import CSV</h1>
+			<p>Import a CSV of companies. The CSV should contain columns for:</p>
+			<ul>
+				<li>name</li>
+				<li>*custom_id</li>
+				<li>street_address1</li>
+				<li>street_address2</li>
+				<li>city</li>
+				<li>postal_code</li>
+				<li>directory_url</li>
+				<li>contact_phone_number</li>
+				<li>contact_fax</li>
+				<li>contact_email</li>
+				<li>contact_firstname</li>
+				<li>contact_lastname</li>
+				<li>**category</li>
+				<li>**services</li>
+			</ul>
+			<p>*custom_id is the CSDA-assigned member ID. If a custom_id matches that of an existing company, that company will be updated. Otherwise, a new company will be created with that row's data.</p>
+			<p>**category and services will map the following tags:<br>A=Affiliate | C=Contractor (US) | CC=Contractor (CA) | OC=Contactor (Overseas) | M=Manufacturer | D=Distributor | G=GPR Imaging | CP=Concrete Polishing | RA=Reciprocal Association<br>FS=Slab Sawing | WL=Wall Sawing | WR=Wire Sawing | HS=Hand Sawing | CD=Core Drilling | CC=Curb Cutting | GG=Grooving and Grinding | SD=Selective Demolition | GPR=GPR Imaging | NDT=Non-destructive Testing | SP=Surface Prep | SR=Slurry Recycling | SC=Slurry Collection | CR=Concrete Recycling<br><i>Unlisted codes will create new tags.</i></p>
+			{{ form(form) }}
+			{% if submitted %}
+			<pre>{{ dump(submitted) }}</pre>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}
