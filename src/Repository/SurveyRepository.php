@@ -19,6 +19,28 @@ class SurveyRepository extends ServiceEntityRepository
         parent::__construct($registry, Survey::class);
     }
 
+    public function findWithDueDatesByStatus(?int $status = null){
+        $builder = $this->createQueryBuilder('s')
+            ->andWhere('s.dueDate is not null')
+            ->orderBy('s.dueDate', 'ASC')
+        ;
+        if(isset($status)){
+            $builder->andWhere('s.status = :val')->setParameter('val', $status);
+        }
+        return $builder->getQuery()->getResult();
+    }
+
+    public function findWithoutDueDatesByStatus(?int $status = null){
+        $builder = $this->createQueryBuilder('s')
+            ->andWhere('s.dueDate is null')
+            ->orderBy('s.id', 'ASC')
+        ;
+        if(isset($status)){
+            $builder->andWhere('s.status = :val')->setParameter('val', $status);
+        }
+        return $builder->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Survey[] Returns an array of Survey objects
     //  */

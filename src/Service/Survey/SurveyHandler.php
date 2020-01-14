@@ -12,8 +12,8 @@ class SurveyHandler{
 
     public function getSurveyStatusTypes(){
         return [
-            'open' => self::STATUS_OPEN,
-            'closed' => self::STATUS_CLOSED,
+            'open' => Survey::STATUS_OPEN,
+            'closed' => Survey::STATUS_CLOSED,
         ];
     }
 

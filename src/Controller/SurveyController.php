@@ -11,6 +11,7 @@ use App\Entity\SurveyTemplate;
 use App\Form\ContactActionType;
 use App\Form\SurveyResponseType;
 use App\Form\SurveyType;
+use App\Repository\SurveyRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,13 +29,13 @@ class SurveyController extends AbstractController
     /**
      * @Route("/surveys/list", name="surveys_list")
      */
-    public function showSurveys(){
-        $surveys = $this->getDoctrine()->getRepository(Survey::class)->findBy([
-            'status' => [1, null],
-        ]);
+    public function showSurveys(SurveyRepository $repository){
+        $surveys_with_dates = $repository->findWithDueDatesByStatus(Survey::STATUS_OPEN);
+        $surveys_without_dates = $repository->findWithoutDueDatesByStatus(Survey::STATUS_OPEN);
 
         return $this->render("survey/list.html.twig", [
-            "surveys" => $surveys
+            "surveys_with_dates" => $surveys_with_dates,
+            "surveys_without_dates" => $surveys_without_dates
         ]);
     }
 
@@ -54,13 +55,13 @@ class SurveyController extends AbstractController
     /**
      * @Route("/surveys/list/closed", name="surveys_closed_list")
      */
-    public function showClosedSurveys(){
-        $surveys = $this->getDoctrine()->getRepository(Survey::class)->findBy([
-            'status' => 2
-        ]);
+    public function showClosedSurveys(SurveyRepository $repository){
+        $surveys_with_dates = $repository->findWithDueDatesByStatus(Survey::STATUS_CLOSED);
+        $surveys_without_dates = $repository->findWithoutDueDatesByStatus(Survey::STATUS_CLOSED);
 
         return $this->render("survey/list.html.twig", [
-            "surveys" => $surveys
+            "surveys_with_dates" => $surveys_with_dates,
+            "surveys_without_dates" => $surveys_without_dates
         ]);
     }
 
