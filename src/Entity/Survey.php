@@ -11,6 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Survey
 {
+    const STATUS_OPEN = 1;
+    const STATUS_CLOSED = 2;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -52,7 +55,7 @@ class Survey
     {
         $this->surveyResponses = new ArrayCollection();
         $this->contactActions = new ArrayCollection();
-        $this->status = 1;
+        $this->status = self::STATUS_OPEN;
     }
 
     public function getId(): ?int

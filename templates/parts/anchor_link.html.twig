@@ -1,0 +1,5 @@
+{% if target is defined %}
+	<a href="{{ href }}" target="{{ target }}">{{ text }} <i data-feather="external-link"></i></a>
+{% else %}
+	<a href="{{ href }}">{{ text }} <i data-feather="link"></i></a>
+{% endif %}

@@ -5,7 +5,7 @@
 	<div class="col-sm-12 col-md-6">
 		<div class="row">
 			<div class="col">
-				<h4><strong>{{ survey.surveyTemplate.name }}</strong> for {{ survey.organization.name }}</h4>
+				<h4><strong>{{ survey.surveyTemplate.name }}</strong> for {% include "parts/anchor_link.html.twig" with {href: path('organizations_edit', {id: survey.organization.id}), target: '_blank', text: survey.organization.name} %}</h4>
 
 				{{form_start(surveyForm)}}
 					{% for response in responses %}
@@ -53,6 +53,7 @@
 					{% endfor %}
 
 					{{ form_row(surveyForm.survey.status)}}
+					{{ form_row(surveyForm.survey.dueDate)}}
 
 					{{ form_row(surveyForm._token) }}
 					<input  class='btn btn-primary' type="submit" value="submit">
