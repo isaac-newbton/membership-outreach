@@ -7,6 +7,7 @@ use App\Entity\Tag;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,20 +22,35 @@ class OrganizationType extends AbstractType
                 'required' => false
             ])
             ->add('directoryUrl', TextType::class, [
-                'label' => 'Website'
+                'label' => 'Website',
+                'required' => false
             ])
-            ->add('contactPerson')
-            ->add('contactPhoneNumber')
-            ->add('contactEmail')
-            ->add('contactFax')
+            ->add('contactPerson', TextType::class, [
+                'required'=>false
+            ])
+            ->add('contactPhoneNumber', TextType::class, [
+                'required'=>false
+            ])
+            ->add('contactEmail', EmailType::class, [
+                'required'=>false
+            ])
+            ->add('contactFax', TextType::class, [
+                'required'=>false
+            ])
             ->add('streetAddress1', TextType::class, [
-                'label' => 'Street address (line 1)'
+                'label' => 'Street address (line 1)',
+                'required'=>false
             ])
             ->add('streetAddress2', TextType::class, [
-                'label' => 'Street address (line 2)'
+                'label' => 'Street address (line 2)',
+                'required'=>false
             ])
-            ->add('city')
-            ->add('postalCode')
+            ->add('city', TextType::class, [
+                'required'=>false
+            ])
+            ->add('postalCode', TextType::class, [
+                'required'=>false
+            ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
                 'choice_label' => function ($t) {
