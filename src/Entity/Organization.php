@@ -39,7 +39,7 @@ class Organization
     private $tags;
 
     /**
-     * @ORM\Column(type="string", length=30, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $contactPhoneNumber;
 
@@ -79,7 +79,7 @@ class Organization
     private $directoryUrl;
 
     /**
-     * @ORM\Column(type="string", length=30, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $contactFax;
 
