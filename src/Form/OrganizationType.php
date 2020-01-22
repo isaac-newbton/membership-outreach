@@ -49,6 +49,7 @@ class OrganizationType extends AbstractType
             ->add('city', TextType::class, [
                 'required'=>false
             ])
+            ->add('state')
             ->add('postalCode', TextType::class, [
                 'required'=>false
             ])
