@@ -38,6 +38,9 @@ class OrganizationType extends AbstractType
             ->add('contactFax', TextType::class, [
                 'required'=>false
             ])
+            ->add('contactOtherNumber', TextType::class, [
+                'required'=>false
+            ])
             ->add('streetAddress1', TextType::class, [
                 'label' => 'Street address (line 1)',
                 'required'=>false
@@ -51,6 +54,12 @@ class OrganizationType extends AbstractType
             ])
             ->add('state')
             ->add('postalCode', TextType::class, [
+                'required'=>false
+            ])
+            ->add('country', TextType::class, [
+                'required'=>false
+            ])
+            ->add('membershipCategory', TextType::class, [
                 'required'=>false
             ])
             ->add('tags', EntityType::class, [
