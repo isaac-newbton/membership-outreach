@@ -137,7 +137,9 @@ class SurveyController extends AbstractController
             }
             // $entityManager->persist($survey);
             $entityManager->flush();
-            return $this->redirectToRoute('surveys_list');
+            return $this->redirectToRoute('surveys_list', [
+                '_fragment' => $survey->getId()
+            ]);
         }
 
         $contactActionForm = $this->createForm(ContactActionType::class, new ContactAction());

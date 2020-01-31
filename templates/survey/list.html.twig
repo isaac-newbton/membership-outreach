@@ -25,12 +25,12 @@
 
 			<ul class="list-group">
 				{% for survey in surveys_with_dates %}
-					<li class="list-group-item">
+					<li class="list-group-item" id="{{survey.id}}">
 						<span class="badge badge-{{ survey.status == 2 ? 'secondary' : 'success' }}">{{ survey.status == 2 ? 'closed' : 'open' }}</span>
 						<a href="{{ path("surveys_response", { id: survey.id }) }}">{{ survey.surveyTemplate.name }}</a> | <a class="font-weight-bold" href="{{ path("organization_surveys", {id: survey.organization.id}) }}">{{survey.organization.name}}</a>
 						<a onClick="return confirm('This will delete all responses for this survey. Are you sure you want to proceed?')" href="{{ path("surveys_delete", {id: survey.id}) }}" class=" btn btn-link text-danger float-right">Delete</a>
-						<a href="" class="btn text-secondary float-right">Close Survey</a><br>
-						{{ survey.dueDate|date('m/d/Y') }}
+						{# <a href="" class="btn text-secondary float-right">Close Survey</a> #}
+						<br>{{ survey.dueDate|date('m/d/Y') }}
 					</li>
 				{% endfor %}
 			</ul>
