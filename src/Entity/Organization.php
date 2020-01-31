@@ -88,6 +88,21 @@ class Organization
      */
     private $state;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $country;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $contactOtherNumber;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $membershipCategory;
+
     public function __construct()
     {
         $this->surveys = new ArrayCollection();
@@ -296,6 +311,42 @@ class Organization
     public function setState(?string $state): self
     {
         $this->state = $state;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getContactOtherNumber(): ?string
+    {
+        return $this->contactOtherNumber;
+    }
+
+    public function setContactOtherNumber(?string $contactOtherNumber): self
+    {
+        $this->contactOtherNumber = $contactOtherNumber;
+
+        return $this;
+    }
+
+    public function getMembershipCategory(): ?string
+    {
+        return $this->membershipCategory;
+    }
+
+    public function setMembershipCategory(?string $membershipCategory): self
+    {
+        $this->membershipCategory = $membershipCategory;
 
         return $this;
     }

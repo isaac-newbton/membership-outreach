@@ -67,9 +67,7 @@ class OrganizationController extends AbstractController {
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($organization);
                 $entityManager->flush();
-                return $this->redirectToRoute("organizations_list", [
-                    '_fragment' => $organization->getId()
-                ]);
+                return $this->redirectToRoute("organizations_list");
             }
 
             return $this->render("organization/form.html.twig", [
@@ -140,6 +138,25 @@ class OrganizationController extends AbstractController {
                     fclose($fh);
                     if(!empty($data)){
                         $tag_code_map = [
+                            'CP'=>'Concrete Polishing',
+                            'RA'=>'Reciprocal Association',
+                            'FS'=>'Slab Sawing',
+                            'SS'=>'Slab Sawing',
+                            'WL'=>'Wall Sawing',
+                            'WR'=>'Wire Sawing',
+                            'HS'=>'Hand Sawing',
+                            'CD'=>'Core Drilling',
+                            'GG'=>'Grooving/Grinding',
+                            'SD'=>'Selective Demolition',
+                            'GPR'=>'GPR Imaging',
+                            'NDT'=>'Non-destructive Testing',
+                            'SP'=>'Surface Prep',
+                            'SR'=>'Slurry Recycling',
+                            'SC'=>'Slurry Collection',
+                            'CR'=>'Concrete Recycling',
+                            'CC'=>'Curb Cutting'
+                        ];
+                        $category_map = [
                             'A'=>'Affiliate',
                             'C'=>'Contactor (US)',
                             'CC'=>'Contractor (CA)',
@@ -147,21 +164,9 @@ class OrganizationController extends AbstractController {
                             'M'=>'Manufacturer',
                             'D'=>'Distributor',
                             'G'=>'GPR Imaging',
-                            'CP'=>'Concrete Polishing',
-                            'RA'=>'Reciprocal Association',
-                            'FS'=>'Slab Sawing',
-                            'WL'=>'Wall Sawing',
-                            'WR'=>'Wire Sawing',
-                            'HS'=>'Hand Sawing',
-                            'CD'=>'Core Drilling',
-                            'GG'=>'Grooving/Grinding',
-                            'SD'=>'Delective Demolition',
-                            'GPR'=>'GPR Imaging',
-                            'NDT'=>'Non-destructive Testing',
-                            'SP'=>'Surface Prep',
-                            'SR'=>'Slurry Recycling',
-                            'SC'=>'Slurry Collection',
-                            'CR'=>'Concrete Recycling'
+                            'FP'=>'Field Personnel',
+                            'OP'=>'Operator',
+                            'RA'=>'Reciprocal Association'
                         ];
                         $entityManager = $this->getDoctrine()->getManager();
                         foreach($data as $_r){
@@ -169,35 +174,32 @@ class OrganizationController extends AbstractController {
                                 //find org by custom_id
                                 $organization = $org_repository->findOneBy(['custom_id'=>$_r['custom_id']]);
                                 if(null==$organization) $organization = new Organization();
-                                if(isset($_r['custom_id'])) $organization->setCustomId($_r['custom_id']);
-                                if(isset($_r['name'])) $organization->setName($_r['name']);
-                                if(isset($_r['postal_code'])) $organization->setPostalCode($_r['postal_code']);
-                                if(isset($_r['contact_email'])) $organization->setContactEmail($_r['contact_email']);
-                                if(isset($_r['contact_firstname']) || isset($_r['contact_lastname'])){
-                                    $organization->setContactPerson((isset($_r['contact_firstname']) ? "{$_r['contact_firstname']} " : '') . $_r['contact_lastname'] ?? '');
+                                if(isset($_r['custom_id']) && ''==$organization->getCustomId()) $organization->setCustomId($_r['custom_id']);
+                                if(isset($_r['name']) && ''==$organization->getName()) $organization->setName($_r['name']);
+                                if(isset($_r['postal_code']) && ''==$organization->getPostalCode()) $organization->setPostalCode($_r['postal_code']);
+                                if(isset($_r['contact_email']) && ''==$organization->getContactEmail()) $organization->setContactEmail($_r['contact_email']);
+                                if(''==$organization->getContactPerson() && (isset($_r['contact_firstname']) || isset($_r['contact_lastname']))){
+                                    $organization->setContactPerson((isset($_r['contact_firstname']) ? "{$_r['contact_firstname']} " : '') . (isset($_r['contact_lastname']) ? $_r['contact_lastname'] : ''));
                                 }
-                                if(isset($_r['directory_url'])) $organization->setDirectoryUrl($_r['directory_url']);
-                                if(isset($_r['street_address1'])) $organization->setStreetAddress1($_r['street_address1']);
-                                if(isset($_r['street_address2'])) $organization->setStreetAddress2($_r['street_address2']);
-                                if(isset($_r['city'])) $organization->setCity($_r['city']);
-                                if(isset($_r['contact_phone_number'])) $organization->setContactPhoneNumber($_r['contact_phone_number']);
-                                if(isset($_r['contact_fax'])) $organization->setContactFax($_r['contact_fax']);
+                                if(isset($_r['directory_url']) && ''==$organization->getDirectoryUrl()) $organization->setDirectoryUrl($_r['directory_url']);
+                                if(isset($_r['street_address1']) && ''==$organization->getStreetAddress1()) $organization->setStreetAddress1($_r['street_address1']);
+                                if(isset($_r['street_address2']) && ''==$organization->getStreetAddress2()) $organization->setStreetAddress2($_r['street_address2']);
+                                if(isset($_r['city']) && ''==$organization->getCity()) $organization->setCity($_r['city']);
+                                if(isset($_r['state']) && ''==$organization->getState()) $organization->setState($_r['state']);
+                                if(isset($_r['country']) && ''==$organization->getCountry()) $organization->setCountry($_r['country']);
+                                if(isset($_r['contact_phone_number']) && ''==$organization->getContactPhoneNumber()) $organization->setContactPhoneNumber($_r['contact_phone_number']);
+                                if(isset($_r['contact_fax']) && ''==$organization->getContactFax()) $organization->setContactFax($_r['contact_fax']);
+                                if(isset($_r['contact_other_number']) && ''==$organization->getContactOtherNumber()) $organization->setContactOtherNumber($_r['contact_other_number']);
                                 $tag_codes = [];
-                                if(isset($_r['category'])){
-                                    $category_codes = explode(',', $_r['category']);
-                                    if(!empty($category_codes)){
-                                        foreach($category_codes as $_c){
-                                            $_c = trim($_c, " \t\n\r\0\x0B2");
-                                            $tag_codes[] = $_c;
-                                        }
-                                    }
+                                if(isset($_r['category']) && ''==$organization->getMembershipCategory()){
+                                    $category = $category_map[strtoupper(rtrim($_r['category'], " \t\n\r\0\x0B2"))] ?? rtrim($_r['category'], " \t\n\r\0\x0B2");
+                                    $organization->setMembershipCategory($category);
                                 }
                                 if(isset($_r['services'])){
                                     $service_codes = explode(',', $_r['services']);
                                     if(!empty($service_codes)){
                                         foreach($service_codes as $_c){
                                             $_c = trim($_c, " \t\n\r\0\x0B2");
-                                            if('CC'==$_c) $_c = 'Curb Cutting';
                                             $tag_codes[] = $_c;
                                         }
                                     }
@@ -214,6 +216,12 @@ class OrganizationController extends AbstractController {
                                                 $entityManager->flush();
                                             }
                                             $organization->addTag($tag);
+                                            if('WS'==strtoupper($_c)){
+                                                $wire_sawing = $tag_repository->findOneBy(['name'=>'Wire Sawing']);
+                                                $wall_sawing = $tag_repository->findOneBy(['name'=>'Wall Sawing']);
+                                                if($wire_sawing) $organization->addTag($wire_sawing);
+                                                if($wall_sawing) $organization->addTag($wall_sawing);
+                                            }
                                         }
                                     }
                                 }
