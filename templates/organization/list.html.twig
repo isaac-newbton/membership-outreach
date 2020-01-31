@@ -26,7 +26,7 @@
                     {% endif %}
                 {% endfor %}
 
-                <li class="list-group-item">
+                <li class="list-group-item" id="{{ organization.id}}">
                     <a href="{{path("organizations_edit", {id: organization.id})}}">{{ organization.name }}</a>
                     <a href="{{ path("organization_surveys", {id: organization.id}) }}" class="btn btn-link text-secondary">Surveys</a>
                     <a onClick='return confirm("This will delete all open and closed surveys ({{ organization.surveys|length() }}) for this organization. Are you sure you want to proceed?")' href="{{ path("organizations_delete", {id: organization.id}) }}" class="btn btn-link text-danger">Delete</a>
