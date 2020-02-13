@@ -1,0 +1,21 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="container">
+	<div class="row py-4">
+		<div class="col">
+			<a href="{{ path('api_create_key') }}" class="btn btn-primary" role="button">Create Key</a>
+			{% if keys %}
+				<ul class="list-group">
+					{% for key in keys %}
+						<li class="list-group-item">
+							{{ key.createdDatetime|date('Y-m-d H:i:s') }} - {{ key.contents }}
+							<a href="{{ path('api_delete_key', {id: key.id}) }}" class="btn btn-sm btn-outline-danger">Delete</a>
+						</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}
