@@ -70,7 +70,7 @@ class ApiController extends AbstractController{
 	/**
 	 * @Route("/api/v1/{key}/orgs/all", methods={"GET"}, name="api_all_orgs")
 	 */
-	public function allOrgs(Request $request, string $key, OrganizationRepository $organizationRepository){
+	public function allOrgs(string $key, OrganizationRepository $organizationRepository){
 		if($this->apiKeyHandler->isValidKey($key)){
 			$organizations = $organizationRepository->findAll();
 			return new JsonResponse(['organizations'=>array_map(function($organization){
@@ -109,6 +109,58 @@ class ApiController extends AbstractController{
 					'tags'=>$tags_array
 				];
 			}, $organizations)], 200);
+		}else{
+			return new JsonResponse(['error'=>'invalid key'], 401);
+		}
+	}
+
+	/**
+	 * @Route("/api/v1/{key}/orgs/{custom_id}", methods={"GET"}, name="api_org_details_custom_id")
+	 */
+	public function orgDetailsCustomId(string $key, string $customId, OrganizationRepository $organizationRepository){
+		if($this->apiKeyHandler->isValidKey($key)){
+			if(empty($customId)){
+				return new JsonResponse(['error'=>'invalid id'], 401);
+			}
+			/**
+			 * @var Organization|null
+			 */
+			$organization = $organizationRepository->findOneBy([
+				'custom_id'=>$customId
+			]);
+			if(!$organization){
+				return new JsonResponse(['error'=>'organization not found'], 404);
+			}
+			$tags = $organization->getTags();
+			$tags_array = [];
+			if($tags && !empty($tags)){
+				foreach($tags as $tag){
+					$tags_array[] = [
+						'name'=>$tag->getName(),
+						'description'=>$tag->getDescription()
+					];
+				}
+			}
+			return new JsonResponse(['organization'=>[
+				'id'=>$organization->getCustomId(),
+				'name'=>$organization->getName(),
+				'website'=>$organization->getDirectoryUrl(),
+				'address'=>[
+					'street1'=>$organization->getStreetAddress1(),
+					'street2'=>$organization->getStreetAddress2(),
+					'city'=>$organization->getCity(),
+					'state'=>$organization->getState(),
+					'postal'=>$organization->getPostalCode()
+				],
+				'contact'=>[
+					'name'=>$organization->getContactPerson(),
+					'email'=>$organization->getContactEmail(),
+					'phone'=>$organization->getContactPhoneNumber(),
+					'fax'=>$organization->getContactFax(),
+					'other_phone'=>$organization->getContactOtherNumber()
+				],
+				'tags'=>$tags_array
+			]], 200);
 		}else{
 			return new JsonResponse(['error'=>'invalid key'], 401);
 		}
