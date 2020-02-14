@@ -80,6 +80,7 @@ class ApiController extends AbstractController{
 				$org = $organization;
 				$tags = $org->getTags();
 				$tags_array = [];
+				$badges_array = [];
 				if($tags && !empty($tags)){
 					foreach($tags as $tag){
 						$tags_array[] = [
@@ -106,7 +107,8 @@ class ApiController extends AbstractController{
 						'fax'=>$org->getContactFax(),
 						'other_phone'=>$org->getContactOtherNumber()
 					],
-					'tags'=>$tags_array
+					'tags'=>$tags_array,
+					'badges'=>$badges_array
 				];
 			}, $organizations)], 200);
 		}else{
@@ -133,6 +135,7 @@ class ApiController extends AbstractController{
 			}
 			$tags = $organization->getTags();
 			$tags_array = [];
+			$badges_array = [];
 			if($tags && !empty($tags)){
 				foreach($tags as $tag){
 					$tags_array[] = [
@@ -159,7 +162,8 @@ class ApiController extends AbstractController{
 					'fax'=>$organization->getContactFax(),
 					'other_phone'=>$organization->getContactOtherNumber()
 				],
-				'tags'=>$tags_array
+				'tags'=>$tags_array,
+				'badges'=>$badges_array
 			]], 200);
 		}else{
 			return new JsonResponse(['error'=>'invalid key'], 401);
