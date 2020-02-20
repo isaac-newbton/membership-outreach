@@ -4,8 +4,11 @@ namespace App\Controller\Api;
 
 use App\Entity\ApiKey;
 use App\Entity\Organization;
+use App\Entity\PostedContent;
+use App\Entity\PostedContentHit;
 use App\Repository\ApiKeyRepository;
 use App\Repository\OrganizationRepository;
+use App\Repository\PostedContentRepository;
 use App\Service\Api\ApiKeyHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -164,6 +167,91 @@ class ApiController extends AbstractController{
 				],
 				'tags'=>$tags_array,
 				'badges'=>$badges_array
+			]], 200);
+		}else{
+			return new JsonResponse(['error'=>'invalid key'], 401);
+		}
+	}
+
+	/**
+	 * @Route("/api/v1/{key}/content", methods={"POST"}, name="api_create_posted_content")
+	 */
+	public function createPostedContent(Request $request, string $key, PostedContentRepository $postedContentRepository, OrganizationRepository $organizationRepository){
+		if($this->apiKeyHandler->isValidKey($key)){
+			if(!$externalId = $request->request->get('id', false)){
+				return new JsonResponse(['error'=>'id is required'], 401);
+			}
+			if(!$orgCustomId = $request->request->get('organization', false)){
+				return new JsonResponse(['error'=>'organization is required'], 401);
+			}
+			/**
+			 * @var Organization
+			 */
+			if(!$organization = $organizationRepository->findOneBy([
+				'custom_id'=>$orgCustomId
+			])){
+				return new JsonResponse(['error'=>'organization not found'], 404);
+			}
+			if($existingPostedContent = $postedContentRepository->findOneBy([
+				'organization'=>$organization,
+				'externalId'=>$externalId
+			])){
+				return new JsonResponse(['error'=>'that organization already has content with that id'], 403);
+			}
+
+			$em = $this->getDoctrine()->getManager();
+			/**
+			 * @var PostedContent
+			 */
+			$postedContent = new PostedContent();
+			$postedContent->setExternalId($externalId);
+			$postedContent->setTitle($request->request->get('title'));
+			$postedContent->setPermalink($request->request->get('permalink'));
+			$postedContent->setContent($request->request->get('content'));
+			if(($meta = $request->request->get('meta', false))){
+				$meta = json_decode($meta, true);
+				if(is_array($meta) && !empty($meta)){
+					$postedContent->setMeta($meta);
+				}
+			}
+			$organization->addPostedContent($postedContent);
+			$em->persist($postedContent);
+			$em->persist($organization);
+			$em->flush();
+
+			return new JsonResponse(['postedContent'=>[
+				'uuid'=>$postedContent->getUuid()
+			]], 200);
+		}else{
+			return new JsonResponse(['error'=>'invalid key'], 401);
+		}
+	}
+
+	/**
+	 * @Route("/api/v1/{key}/content/{uuid}/hit/{type}", methods={"GET"}, name="api_hit_posted_content")
+	 */
+	public function hitPostedContent(Request $request, string $key, string $uuid, string $type, PostedContentRepository $postedContentRepository){
+		if($this->apiKeyHandler->isValidKey($key)){
+			if(!$postedContent = $postedContentRepository->findOneBy(['uuid'=>$uuid])){
+				return new JsonResponse(['error'=>'posted content not found'], 404);
+			}
+			
+			$em = $this->getDoctrine()->getManager();
+			/**
+			 * @var PostedContentHit
+			 */
+			$postedContentHit = new PostedContentHit();
+			$postedContentHit->setType($type);
+			$postedContentHit->setPostedContent($postedContent);
+			$params = $request->query->all();
+			if(is_array($params) && !empty($params)){
+				$postedContentHit->setMeta($params);
+			}
+			$em->persist($postedContentHit);
+			$em->flush();
+
+			return new JsonResponse(['postedContentHit'=>[
+				'uuid'=>$postedContentHit->getUuid()
 			]], 200);
 		}else{
 			return new JsonResponse(['error'=>'invalid key'], 401);

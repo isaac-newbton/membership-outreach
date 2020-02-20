@@ -103,10 +103,16 @@ class Organization
      */
     private $membershipCategory;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PostedContent", mappedBy="organization", orphanRemoval=true)
+     */
+    private $postedContents;
+
     public function __construct()
     {
         $this->surveys = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->postedContents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -347,6 +353,37 @@ class Organization
     public function setMembershipCategory(?string $membershipCategory): self
     {
         $this->membershipCategory = $membershipCategory;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PostedContent[]
+     */
+    public function getPostedContents(): Collection
+    {
+        return $this->postedContents;
+    }
+
+    public function addPostedContent(PostedContent $postedContent): self
+    {
+        if (!$this->postedContents->contains($postedContent)) {
+            $this->postedContents[] = $postedContent;
+            $postedContent->setOrganization($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostedContent(PostedContent $postedContent): self
+    {
+        if ($this->postedContents->contains($postedContent)) {
+            $this->postedContents->removeElement($postedContent);
+            // set the owning side to null (unless already changed)
+            if ($postedContent->getOrganization() === $this) {
+                $postedContent->setOrganization(null);
+            }
+        }
 
         return $this;
     }

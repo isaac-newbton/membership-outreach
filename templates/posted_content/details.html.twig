@@ -1,0 +1,75 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="container">
+    <div class="row my-3">
+        <div class="col">
+            <h1>{{ postedContent.title ?? postedContent.uuid }}</h1>
+			{% if postedContent.permalink %}
+				<h2 class="h6">Link: <a href="{{ postedContent.permalink }}" target="_blank">{{ postedContent.permalink }}</a>{{ postedContent.externalId ? (' | External ID: ' ~ postedContent.externalId) : '' }}</h2>
+			{% endif %}
+			<div class="row">
+				<div class="col">
+					{% if postedContent.content %}
+						<div class="border p-3">
+							{{ postedContent.content|raw }}
+						</div>
+					{% endif %}
+				</div>
+				<div class="col">
+					<h2>Activity</h2>
+					{% if hits and 0 < hits|length %}
+						{% if readHits and 0 < readHits|length %}
+							<h3 class="h5">Reads ({{ readHits|length }})</h3>
+							<table class="table">
+								<tbody>
+									{% for hit in readHits %}
+										<tr>
+											<th scope="row">
+												{{ hit.datetime|date('m/d/Y g:i:sA') }}
+											</th>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						{% endif %}
+
+						{% if clickHits and 0 < clickHits|length %}
+							<h3 class="h5">Clicks ({{ clickHits|length }})</h3>
+							<table class="table">
+								<tbody>
+									{% for hit in clickHits %}
+										<tr>
+											<th scope="row">
+												{{ hit.datetime|date('m/d/Y g:i:sA') }}
+											</th>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						{% endif %}
+
+						<h3 class="h5">All ({{ hits|length }})</h3>
+						<table class="table">
+							<tbody>
+								{% for hit in hits %}
+									<tr>
+										<th scope="row">
+											{{ hit.datetime|date('m/d/Y g:i:sA') }}
+										</th>
+										<td>
+											{{ hit.type }}
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					{% else %}
+						No hits yet.
+					{% endif %}
+				</div>
+			</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
