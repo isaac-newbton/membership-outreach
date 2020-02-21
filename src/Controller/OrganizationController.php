@@ -110,6 +110,19 @@ class OrganizationController extends AbstractController {
     }
 
     /**
+     * @Route("organizations/{id}/content", name="organization_content", requirements={"id"="\d+"})
+     * @
+     */
+    public function contentList(int $id){
+        $organization = $this->getDoctrine()->getRepository(Organization::class)->find($id);
+
+        return $this->render("organization/content.html.twig", [
+            "organization" => $organization,
+            "content" => $organization->getPostedContents()
+        ]);
+    }
+
+    /**
      * @Route("organizations/import", name="organizations_import")
      */
     public function import(Request $request, OrganizationRepository $org_repository, TagRepository $tag_repository){
