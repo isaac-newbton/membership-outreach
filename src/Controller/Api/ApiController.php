@@ -120,7 +120,7 @@ class ApiController extends AbstractController{
 	}
 
 	/**
-	 * @Route("/api/v1/{key}/orgs/{custom_id}", methods={"GET"}, name="api_org_details_custom_id")
+	 * @Route("/api/v1/{key}/orgs/{customId}", methods={"GET"}, name="api_org_details_custom_id")
 	 */
 	public function orgDetailsCustomId(string $key, string $customId, OrganizationRepository $organizationRepository){
 		if($this->apiKeyHandler->isValidKey($key)){
