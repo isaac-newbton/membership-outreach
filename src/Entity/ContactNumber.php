@@ -3,18 +3,19 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ContactNumberRepository")
  */
 class ContactNumber
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    use EntityIdTrait;
+
+    const TYPE_OFFICE = 1;
+    const TYPE_MOBILE = 2;
+    const TYPE_HOME = 3;
+    const TYPE_FAX = 4;
 
     /**
      * @ORM\Column(type="string", length=30)
@@ -32,9 +33,10 @@ class ContactNumber
      */
     private $contact;
 
-    public function getId(): ?int
+    public function __construct()
     {
-        return $this->id;
+        $this->uuid = Uuid::uuid4();
+        $this->type = self::TYPE_OFFICE;
     }
 
     public function getNumber(): ?string
