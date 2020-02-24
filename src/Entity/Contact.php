@@ -5,18 +5,18 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ContactRepository")
  */
 class Contact
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    use EntityIdTrait;
+
+    const TYPE_OWNER = 1;
+    const TYPE_BUSINESS = 2;
+    const TYPE_SALES = 3;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -47,11 +47,8 @@ class Contact
     public function __construct()
     {
         $this->contactNumbers = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
+        $this->uuid = Uuid::uuid4();
+        $this->type = self::TYPE_OWNER;
     }
 
     public function getName(): ?string

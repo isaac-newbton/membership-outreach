@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Contact;
 use App\Entity\Organization;
 use App\Entity\Survey;
 use App\Entity\Tag;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class OrganizationController extends AbstractController {
 
@@ -94,7 +96,7 @@ class OrganizationController extends AbstractController {
     }
 
     /**
-     * @Route("organizations/{id}/surveys", name="organization_surveys", requirements={"id"="\d+"})
+     * @Route("/organizations/{id}/surveys", name="organization_surveys", requirements={"id"="\d+"})
      * @
      */
     public function showOrganizationSurveys(int $id){
@@ -110,7 +112,7 @@ class OrganizationController extends AbstractController {
     }
 
     /**
-     * @Route("organizations/{id}/content", name="organization_content", requirements={"id"="\d+"})
+     * @Route("/organizations/{id}/content", name="organization_content", requirements={"id"="\d+"})
      * @
      */
     public function contentList(int $id){
@@ -120,6 +122,84 @@ class OrganizationController extends AbstractController {
             "organization" => $organization,
             "content" => $organization->getPostedContents()
         ]);
+    }
+
+    /**
+     * @Route("/organizations/{id}/contacts", name="organization_contacts", requirements={"id"="\d+"}, methods={"GET"})
+     */
+    public function contactList(int $id){
+        /**
+         * @var Organization
+         */
+        $organization = $this->getDoctrine()->getRepository(Organization::class)->find($id);
+        return $this->render("organization/contacts.html.twig", [
+            "organization" => $organization,
+            "content" => $organization->getContacts()
+        ]);
+    }
+
+    /**
+     * @Route("/organizations/{id}/contacts", name="ogranization_create_contact", requirements={"id"="\d+"}, methods={"POST"})
+     */
+    public function createContact(int $id, Request $request){
+        /**
+         * @var Organization
+         */
+        $organization = $this->getDoctrine()->getRepository(Organization::class)->find($id);
+
+        $contact = new Contact();
+        $contact->setName($request->get('name'));
+        $contact->setEmail($request->get('email'));
+        $contact->setType($request->get('type', Contact::TYPE_OWNER));
+        $organization->addContact($contact);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($contact);
+        $em->persist($organization);
+        $em->flush();
+
+        return $this->redirectToRoute('organization_contacts', ['id'=>$organization->getId()]);
+    }
+
+    /**
+     * @Route("/contacts/{uuid}", name="view_contact", methods={"GET"})
+     */
+    public function viewContact(string $uuid){
+        /**
+         * @var Contact|null
+         */
+        $contact = $this->getDoctrine()->getRepository(Contact::class)->findOneBy([
+            'uuid'=>$uuid
+        ]);
+
+        if(!$contact) return new NotFoundHttpException();
+
+        return $this->render('contact/view.html.twig', [
+            'contact'=>$contact
+        ]);
+    }
+
+    /**
+     * @Route("/contacts/{uuid}", name="update_contact", methods={"POST"})
+     */
+    public function updateContact(string $uuid, Request $request){
+        /**
+         * @var Contact|null
+         */
+        $contact = $this->getDoctrine()->getRepository(Contact::class)->findOneBy([
+            'uuid'=>$uuid
+        ]);
+
+        if(!$contact) return new NotFoundHttpException();
+
+        $em = $this->getDoctrine()->getManager();
+        $params = $request->request->all();
+        if(isset($params['type'])) $contact->setType($params['type']);
+        if(isset($params['name'])) $contact->setName($params['name']);
+        if(isset($params['email'])) $contact->setEmail($params['email']);
+        $em->persist($contact);
+        $em->flush();
+
+        return $this->redirectToRoute('view_contact', ['uuid'=>$uuid]);
     }
 
     /**
