@@ -69,7 +69,7 @@ class OrganizationController extends AbstractController {
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($organization);
                 $entityManager->flush();
-                return $this->redirectToRoute("organizations_list");
+                return $this->redirectToRoute("organizations_list", ['_fragment'=>$organization->getId()]);
             }
 
             return $this->render("organization/form.html.twig", [
