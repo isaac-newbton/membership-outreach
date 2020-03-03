@@ -30,11 +30,12 @@
                     <a href="{{path("organizations_edit", {id: organization.id})}}">{{ organization.name }}</a>
                     <a href="{{ path("organization_surveys", {id: organization.id}) }}" class="btn btn-link text-secondary">Surveys</a>
                     <a href="{{ path("organization_content", {id: organization.id}) }}" class="btn btn-link text-secondary">Posted Content ({{ organization.postedContents|length }})</a>
+                    <a href="{{ path("organization_contacts", {id: organization.id}) }}" class="btn btn-link text-secondary">Contacts ({{ organization.contacts|length }})</a>
                     <a onClick='return confirm("This will delete all open and closed surveys ({{ organization.surveys|length() }}) for this organization. Are you sure you want to proceed?")' href="{{ path("organizations_delete", {id: organization.id}) }}" class="btn btn-link text-danger">Delete</a>
                     {% if openSurveys > 0 %}
                     <span class="float-right badge badge-primary">{{ openSurveys }} Open Survey(s)</span>
                     {% endif %}
-                </li>    
+                </li>
                 {% endfor %}
             </ul>
         </div>

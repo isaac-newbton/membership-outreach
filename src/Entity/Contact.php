@@ -14,9 +14,12 @@ class Contact
 {
     use EntityIdTrait;
 
-    const TYPE_OWNER = 1;
-    const TYPE_BUSINESS = 2;
-    const TYPE_SALES = 3;
+    const TYPE_UNKNOWN = 0;
+    const TYPE_NEW_LEADS = 1;
+    const TYPE_OWNER_MANAGER = 2;
+    const TYPE_MEMBERSHIP_BENEFITS = 3;
+    const TYPE_SAFETY_MANAGER = 4;
+    const TYPE_ACCOUNT_PAYABLE = 5;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -34,21 +37,21 @@ class Contact
     private $email;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ContactNumber", mappedBy="contact", orphanRemoval=true)
-     */
-    private $contactNumbers;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization", inversedBy="contacts")
      * @ORM\JoinColumn(nullable=false)
      */
     private $organization;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $phone;
+
     public function __construct()
     {
         $this->contactNumbers = new ArrayCollection();
         $this->uuid = Uuid::uuid4();
-        $this->type = self::TYPE_OWNER;
+        $this->type = self::TYPE_UNKNOWN;
     }
 
     public function getName(): ?string
@@ -66,6 +69,30 @@ class Contact
     public function getType(): ?int
     {
         return $this->type;
+    }
+
+    public function getTypeString(): ?string{
+        switch($this->type){
+            case self::TYPE_ACCOUNT_PAYABLE:
+                return 'Account payable';
+            break;
+            case self::TYPE_MEMBERSHIP_BENEFITS:
+                return 'Membership benefits';
+            break;
+            case self::TYPE_NEW_LEADS:
+                return 'New leads';
+            break;
+            case self::TYPE_OWNER_MANAGER:
+                return 'Owner/manager';
+            break;
+            case self::TYPE_SAFETY_MANAGER:
+                return 'Safety manager';
+            break;
+            case self::TYPE_UNKNOWN:
+            default:
+                return 'Unknown';
+            break;
+        }
     }
 
     public function setType(?int $type): self
@@ -87,37 +114,6 @@ class Contact
         return $this;
     }
 
-    /**
-     * @return Collection|ContactNumber[]
-     */
-    public function getContactNumbers(): Collection
-    {
-        return $this->contactNumbers;
-    }
-
-    public function addContactNumber(ContactNumber $contactNumber): self
-    {
-        if (!$this->contactNumbers->contains($contactNumber)) {
-            $this->contactNumbers[] = $contactNumber;
-            $contactNumber->setContact($this);
-        }
-
-        return $this;
-    }
-
-    public function removeContactNumber(ContactNumber $contactNumber): self
-    {
-        if ($this->contactNumbers->contains($contactNumber)) {
-            $this->contactNumbers->removeElement($contactNumber);
-            // set the owning side to null (unless already changed)
-            if ($contactNumber->getContact() === $this) {
-                $contactNumber->setContact(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getOrganization(): ?Organization
     {
         return $this->organization;
@@ -126,6 +122,18 @@ class Contact
     public function setOrganization(?Organization $organization): self
     {
         $this->organization = $organization;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
 
         return $this;
     }

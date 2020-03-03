@@ -134,7 +134,7 @@ class OrganizationController extends AbstractController {
         $organization = $this->getDoctrine()->getRepository(Organization::class)->find($id);
         return $this->render("organization/contacts.html.twig", [
             "organization" => $organization,
-            "content" => $organization->getContacts()
+            "contacts" => $organization->getContacts()
         ]);
     }
 
@@ -150,7 +150,8 @@ class OrganizationController extends AbstractController {
         $contact = new Contact();
         $contact->setName($request->get('name'));
         $contact->setEmail($request->get('email'));
-        $contact->setType($request->get('type', Contact::TYPE_OWNER));
+        $contact->setPhone($request->get('phone'));
+        $contact->setType($request->get('type', Contact::TYPE_UNKNOWN));
         $organization->addContact($contact);
         $em = $this->getDoctrine()->getManager();
         $em->persist($contact);
@@ -174,7 +175,8 @@ class OrganizationController extends AbstractController {
         if(!$contact) return new NotFoundHttpException();
 
         return $this->render('contact/view.html.twig', [
-            'contact'=>$contact
+            'contact'=>$contact,
+            'organization'=>$contact->getOrganization()
         ]);
     }
 
