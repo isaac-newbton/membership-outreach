@@ -1,0 +1,51 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="container">
+	<div class="row my-3">
+		<div class="col">
+		{% for flashMessage in app.session.flashbag.get('message') %}
+
+		<div class="badge badge-success">
+			{{ flashMessage }}
+		</div>
+
+		{% endfor %}
+		</div>
+	</div>
+	<div class="row py-4">
+		<div class="col">
+			<a href="{{ path("organization_contacts", {id: organization.id}) }}">Back to {{ organization.name }}</a>
+		</div>
+	</div>
+    <div class="row py-4">
+		<div class="col">
+			<form action="" method="post">
+				<div class="form-group">
+					<label for="contactName">Name</label>
+					<input type="text" class="form-control" name="name" id="contactName" placeholder="Name" required value="{{ contact.name }}">
+				</div>
+				<div class="form-group">
+					<label for="contactType">Type</label>
+					<select class="form-control" name="type" id="contactType">
+						<option value="1"{{ 1 == contact.type ? ' selected' : '' }}>New leads</option>
+						<option value="2"{{ 2 == contact.type ? ' selected' : '' }}>Owner/manager</option>
+						<option value="3"{{ 3 == contact.type ? ' selected' : '' }}>Membership benefits</option>
+						<option value="4"{{ 4 == contact.type ? ' selected' : '' }}>Safety manager</option>
+						<option value="5"{{ 5 == contact.type ? ' selected' : '' }}>Account payable</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="contactEmail">Email</label>
+					<input type="email" class="form-control" name="email" id="contactEmail" placeholder="email" value="{{ contact.email }}">
+				</div>
+				<div class="form-group">
+					<label for="contactPhone">Phone</label>
+					<input type="text" class="form-control" name="phone" id="contactPhone" placeholder="phone" value="{{ contact.phone }}">
+				</div>
+				<button type="submit" class="btn btn-primary">Update</button>
+			</form>
+		</div>
+    </div>
+</div>
+{% endblock %}
