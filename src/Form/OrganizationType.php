@@ -30,15 +30,19 @@ class OrganizationType extends AbstractType
                 'required'=>false
             ])
             ->add('contactPhoneNumber', TextType::class, [
+                'label'=>'Business Phone Number',
                 'required'=>false
             ])
             ->add('contactEmail', EmailType::class, [
+                'label'=>'Business Email',
                 'required'=>false
             ])
             ->add('contactFax', TextType::class, [
+                'label'=>'Business Fax',
                 'required'=>false
             ])
             ->add('contactOtherNumber', TextType::class, [
+                'label'=>'Business Other Number',
                 'required'=>false
             ])
             ->add('streetAddress1', TextType::class, [

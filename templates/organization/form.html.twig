@@ -44,7 +44,57 @@
 		</div>
 		{% if organization is defined %}
 		<div class="col-sm-12 col-md-4">
-		<h5>Latest Notes</h5>
+			<h5>Contacts</h5>
+			<div class="list-group">
+				{% if contacts %}
+					{% for contact in contacts %}
+						<div class="list-group-item">
+							<div class="d-flex w-100 justify-content-between">
+								<h5 class="mb-1"><a href="{{ path("view_contact", {uuid:contact.uuid}) }}">{{ contact.name }}</a></h5>
+								<small>{{ contact.typeString }}</small>
+							</div>
+							<ul>
+								<li>Email: {{ contact.email }}</li>
+								<li>Office: {{ contact.phone }}</li>
+								<li>Mobile: {{ contact.mobile }}</li>
+							</ul>
+						</div>
+					{% endfor %}
+				{% endif %}
+				<div class="list-group-item">
+					<h5>Add new contact</h5>
+					<form action="{{ path("ogranization_create_contact", {id:organization.id}) }}" method="post">
+						<div class="form-group">
+							<label for="contactName">Name</label>
+							<input type="text" class="form-control" name="name" id="contactName" placeholder="Name" required>
+						</div>
+						<div class="form-group">
+							<label for="contactType">Type</label>
+							<select class="form-control" name="type" id="contactType">
+								<option value="1">New leads</option>
+								<option value="2">Owner/manager</option>
+								<option value="3">Membership benefits</option>
+								<option value="4">Safety manager</option>
+								<option value="5">Account payable</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="contactEmail">Email</label>
+							<input type="email" class="form-control" name="email" id="contactEmail" placeholder="email">
+						</div>
+						<div class="form-group">
+							<label for="contactPhone">Office Phone</label>
+							<input type="text" class="form-control" name="phone" id="contactPhone" placeholder="phone">
+						</div>
+						<div class="form-group">
+							<label for="mobilePhone">Mobile Phone</label>
+							<input type="text" class="form-control" name="mobile" id="mobilePhone" placeholder="phone">
+						</div>
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</form>
+				</div>
+			</div>
+			<h5>Latest Notes</h5>
 			{% for survey in organization.surveys %}
 				{% for contactAction in survey.contactActions|reverse() %}
 					<div class="card my-1">

@@ -15,7 +15,7 @@
 	</div>
 	<div class="row py-4">
 		<div class="col">
-			<a href="{{ path("organization_contacts", {id: organization.id}) }}">Back to {{ organization.name }}</a>
+			<a href="{{ path("organizations_edit", {id: organization.id}) }}">Back to {{ organization.name }}</a>
 		</div>
 	</div>
     <div class="row py-4">
@@ -40,8 +40,12 @@
 					<input type="email" class="form-control" name="email" id="contactEmail" placeholder="email" value="{{ contact.email }}">
 				</div>
 				<div class="form-group">
-					<label for="contactPhone">Phone</label>
-					<input type="text" class="form-control" name="phone" id="contactPhone" placeholder="phone" value="{{ contact.phone }}">
+					<label for="officePhone">Office Phone</label>
+					<input type="text" class="form-control" name="phone" id="officePhone" placeholder="phone" value="{{ contact.phone }}">
+				</div>
+				<div class="form-group">
+					<label for="mobilePhone">Mobile Phone</label>
+					<input type="text" class="form-control" name="mobile" id="mobilePhone" placeholder="phone" value="{{ contact.mobile }}">
 				</div>
 				<button type="submit" class="btn btn-primary">Update</button>
 			</form>

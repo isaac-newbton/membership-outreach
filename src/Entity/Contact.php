@@ -47,6 +47,11 @@ class Contact
      */
     private $phone;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $mobile;
+
     public function __construct()
     {
         $this->contactNumbers = new ArrayCollection();
@@ -134,6 +139,18 @@ class Contact
     public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getMobile(): ?string
+    {
+        return $this->mobile;
+    }
+
+    public function setMobile(?string $mobile): self
+    {
+        $this->mobile = $mobile;
 
         return $this;
     }

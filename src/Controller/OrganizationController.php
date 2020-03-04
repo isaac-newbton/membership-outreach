@@ -74,7 +74,8 @@ class OrganizationController extends AbstractController {
 
             return $this->render("organization/form.html.twig", [
                 "form" => $form->createView(),
-                "organization" => $organization
+                "organization" => $organization,
+                "contacts"=>$organization->getContacts()
             ]);
         }
     }
@@ -151,6 +152,7 @@ class OrganizationController extends AbstractController {
         $contact->setName($request->get('name'));
         $contact->setEmail($request->get('email'));
         $contact->setPhone($request->get('phone'));
+        $contact->setMobile($request->get('mobile'));
         $contact->setType($request->get('type', Contact::TYPE_UNKNOWN));
         $organization->addContact($contact);
         $em = $this->getDoctrine()->getManager();
@@ -158,7 +160,7 @@ class OrganizationController extends AbstractController {
         $em->persist($organization);
         $em->flush();
 
-        return $this->redirectToRoute('organization_contacts', ['id'=>$organization->getId()]);
+        return $this->redirectToRoute('organizations_edit', ['id'=>$organization->getId()]);
     }
 
     /**
@@ -195,13 +197,15 @@ class OrganizationController extends AbstractController {
 
         $em = $this->getDoctrine()->getManager();
         $params = $request->request->all();
-        if(isset($params['type'])) $contact->setType($params['type']);
-        if(isset($params['name'])) $contact->setName($params['name']);
-        if(isset($params['email'])) $contact->setEmail($params['email']);
+        if(array_key_exists('type', $params)) $contact->setType($params['type']);
+        if(array_key_exists('name', $params)) $contact->setName($params['name']);
+        if(array_key_exists('email', $params)) $contact->setEmail($params['email']);
+        if(array_key_exists('phone', $params)) $contact->setPhone($params['phone']);
+        if(array_key_exists('mobile', $params)) $contact->setMobile($params['mobile']);
         $em->persist($contact);
         $em->flush();
 
-        return $this->redirectToRoute('view_contact', ['uuid'=>$uuid]);
+        return $this->redirectToRoute('organizations_edit', ['id'=>$contact->getOrganization()->getId()]);
     }
 
     /**
