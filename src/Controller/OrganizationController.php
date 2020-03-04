@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class OrganizationController extends AbstractController {
@@ -206,6 +207,28 @@ class OrganizationController extends AbstractController {
         $em->flush();
 
         return $this->redirectToRoute('organizations_edit', ['id'=>$contact->getOrganization()->getId()]);
+    }
+
+    /**
+     * @Route("/contacts/{uuid}", name="delete_contact", methods={"DELETE"})
+     */
+    public function deleteContact(string $uuid){
+        /**
+         * @var Contact|null
+         */
+        $contact = $this->getDoctrine()->getRepository(Contact::class)->findOneBy([
+            'uuid'=>$uuid
+        ]);
+
+        if(!$contact) return new NotFoundHttpException();
+
+        $organization = $contact->getOrganization();
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($contact);
+        $em->flush();
+
+        return new JsonResponse(['deleted'=>true], 200);
     }
 
     /**

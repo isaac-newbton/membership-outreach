@@ -17,6 +17,9 @@
 		<div class="col">
 			<a href="{{ path("organizations_edit", {id: organization.id}) }}">Back to {{ organization.name }}</a>
 		</div>
+		<div class="col clearfix">
+			<button type="button" class="btn btn-sm btn-outline-danger float-right" id="delete_button">Delete</button>
+		</div>
 	</div>
     <div class="row py-4">
 		<div class="col">
@@ -52,4 +55,20 @@
 		</div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+	let deleteButton = document.getElementById('delete_button')
+	deleteButton.addEventListener('click', function(e){
+		if(confirm('Delete this item?')){
+			fetch('{{ path("delete_contact", {uuid:contact.uuid}) }}', {
+				method: 'delete',
+				redirect: 'follow'
+			}).then((r)=>r.json()).then((result)=>{
+				window.location.href = '{{ path("organizations_edit", {id:organization.id}) }}'
+			})
+		}
+	})
+</script>
 {% endblock %}
