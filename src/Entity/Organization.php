@@ -110,6 +110,7 @@ class Organization
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Contact", mappedBy="organization", orphanRemoval=true)
+     * @ORM\OrderBy({"isPrimary" = "DESC"})
      */
     private $contacts;
 

@@ -50,7 +50,13 @@
 					<label for="mobilePhone">Mobile Phone</label>
 					<input type="text" class="form-control" name="mobile" id="mobilePhone" placeholder="phone" value="{{ contact.mobile }}">
 				</div>
-				<button type="submit" class="btn btn-primary">Update</button>
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" id="isPrimary" name="primary"{{ contact.isPrimary ? ' checked' : '' }}>
+					<label for="isPrimary" class="form-check-label">Primary</label>
+				</div>
+				<div class="mt-2">
+					<button type="submit" class="btn btn-primary">Update</button>
+				</div>
 			</form>
 		</div>
     </div>

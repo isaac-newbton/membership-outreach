@@ -127,20 +127,6 @@ class OrganizationController extends AbstractController {
     }
 
     /**
-     * @Route("/organizations/{id}/contacts", name="organization_contacts", requirements={"id"="\d+"}, methods={"GET"})
-     */
-    public function contactList(int $id){
-        /**
-         * @var Organization
-         */
-        $organization = $this->getDoctrine()->getRepository(Organization::class)->find($id);
-        return $this->render("organization/contacts.html.twig", [
-            "organization" => $organization,
-            "contacts" => $organization->getContacts()
-        ]);
-    }
-
-    /**
      * @Route("/organizations/{id}/contacts", name="ogranization_create_contact", requirements={"id"="\d+"}, methods={"POST"})
      */
     public function createContact(int $id, Request $request){
@@ -155,6 +141,7 @@ class OrganizationController extends AbstractController {
         $contact->setPhone($request->get('phone'));
         $contact->setMobile($request->get('mobile'));
         $contact->setType($request->get('type', Contact::TYPE_UNKNOWN));
+        $contact->setIsPrimary((bool)$request->get('primary'));
         $organization->addContact($contact);
         $em = $this->getDoctrine()->getManager();
         $em->persist($contact);
@@ -203,6 +190,7 @@ class OrganizationController extends AbstractController {
         if(array_key_exists('email', $params)) $contact->setEmail($params['email']);
         if(array_key_exists('phone', $params)) $contact->setPhone($params['phone']);
         if(array_key_exists('mobile', $params)) $contact->setMobile($params['mobile']);
+        $contact->setIsPrimary(array_key_exists('primary', $params));
         $em->persist($contact);
         $em->flush();
 

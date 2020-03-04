@@ -52,11 +52,17 @@ class Contact
      */
     private $mobile;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isPrimary;
+
     public function __construct()
     {
         $this->contactNumbers = new ArrayCollection();
         $this->uuid = Uuid::uuid4();
         $this->type = self::TYPE_UNKNOWN;
+        $this->isPrimary = false;
     }
 
     public function getName(): ?string
@@ -151,6 +157,18 @@ class Contact
     public function setMobile(?string $mobile): self
     {
         $this->mobile = $mobile;
+
+        return $this;
+    }
+
+    public function getIsPrimary(): ?bool
+    {
+        return $this->isPrimary;
+    }
+
+    public function setIsPrimary(bool $isPrimary): self
+    {
+        $this->isPrimary = $isPrimary;
 
         return $this;
     }
