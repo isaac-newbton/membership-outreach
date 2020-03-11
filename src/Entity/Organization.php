@@ -114,12 +114,18 @@ class Organization
      */
     private $contacts;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ContactAction", mappedBy="organization")
+     */
+    private $contactActions;
+
     public function __construct()
     {
         $this->surveys = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->postedContents = new ArrayCollection();
         $this->contacts = new ArrayCollection();
+        $this->contactActions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -420,6 +426,37 @@ class Organization
             // set the owning side to null (unless already changed)
             if ($contact->getOrganization() === $this) {
                 $contact->setOrganization(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ContactAction[]
+     */
+    public function getContactActions(): Collection
+    {
+        return $this->contactActions;
+    }
+
+    public function addContactAction(ContactAction $contactAction): self
+    {
+        if (!$this->contactActions->contains($contactAction)) {
+            $this->contactActions[] = $contactAction;
+            $contactAction->setOrganization($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContactAction(ContactAction $contactAction): self
+    {
+        if ($this->contactActions->contains($contactAction)) {
+            $this->contactActions->removeElement($contactAction);
+            // set the owning side to null (unless already changed)
+            if ($contactAction->getOrganization() === $this) {
+                $contactAction->setOrganization(null);
             }
         }
 

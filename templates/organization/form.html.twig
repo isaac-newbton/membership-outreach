@@ -96,13 +96,38 @@
 					</form>
 				</div>
 			</div>
-			<h5>Latest Notes</h5>
+			<h5 id="notes" class="mt-5">Latest Notes</h5>
+			{% for contactAction in organization.contactActions %}
+				<div class="card my-1">
+					<div class="card-header">
+						<a href="{{ path('view_note', {uuid:contactAction.uuid}) }}"><small>&lt;{{ contactAction.user.email }}&gt; {{ contactAction.timestamp|date('m/d/y h:i') }}</small></a>
+					</div>
+					<div class="card-body bg-light">
+						{{ contactAction.note|raw }}
+					</div>
+				</div>
+			{% endfor %}
+			<div class="card my-1">
+				<div class="card-header">
+					<h5>Add new note</h5>
+					<form action="{{ path('organization_create_note', {id:organization.id}) }}" method="post">
+						<div class="form-group">
+							<label for="contactActionNote">Note</label>
+							<textarea class="form-control" name="note" id="contactActionNote" required></textarea>
+						</div>
+						<div class="mt-2">
+							<button type="submit" class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<h5>Survey Notes</h5>
 			{% for survey in organization.surveys %}
 				{% for contactAction in survey.contactActions|reverse() %}
 					<div class="card my-1">
-					<card class="card-header">
-						<a href="{{path("surveys_response", {id: contactAction.survey.id} )}}">{{contactAction.survey.surveyTemplate.name}}</a>
-					</card>
+						<card class="card-header">
+							<a href="{{path("surveys_response", {id: contactAction.survey.id} )}}">{{contactAction.survey.surveyTemplate.name}}</a>
+						</card>
 						<div class="card-body bg-light">
 							<p>{{ contactAction.note }}</p>
 							<p class="small"><strong>{{ contactAction.user.email }}</strong> at {{ contactAction.timeStamp|date('m/d/y h:i')}}</p>

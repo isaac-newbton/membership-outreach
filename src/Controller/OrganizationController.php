@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Contact;
+use App\Entity\ContactAction;
 use App\Entity\Organization;
 use App\Entity\Survey;
 use App\Entity\Tag;
@@ -214,6 +215,90 @@ class OrganizationController extends AbstractController {
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($contact);
+        $em->flush();
+
+        return new JsonResponse(['deleted'=>true], 200);
+    }
+
+    /**
+     * @Route("/organizations/{id}/notes", name="organization_create_note", requirements={"id"="\d+"}, methods={"POST"})
+     */
+    public function createNote(int $id, Request $request){
+        /**
+         * @var Organization
+         */
+        $organization = $this->getDoctrine()->getRepository(Organization::class)->find($id);
+
+        $note = new ContactAction();
+        $note->setNote($request->get('note'));
+        $note->setUser($this->getUser());
+        $organization->addContactAction($note);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($note);
+        $em->persist($organization);
+        $em->flush();
+
+        return $this->redirectToRoute('organizations_edit', ['id'=>$organization->getId(), '_fragment'=>'notes']);
+    }
+
+    /**
+     * @Route("/notes/{uuid}", name="view_note", methods={"GET"})
+     */
+    public function viewNote(string $uuid){
+        /**
+         * @var ContactAction|null
+         */
+        $note = $this->getDoctrine()->getRepository(ContactAction::class)->findOneBy([
+            'uuid'=>$uuid
+        ]);
+
+        if(!$note) return new NotFoundHttpException();
+
+        return $this->render('note/view.html.twig', [
+            'note'=>$note,
+            'organization'=>$note->getOrganization()
+        ]);
+    }
+
+    /**
+     * @Route("/notes/{uuid}", name="update_note", methods={"POST"})
+     */
+    public function updateNote(string $uuid, Request $request){
+        /**
+         * @var ContactAction|null
+         */
+        $note = $this->getDoctrine()->getRepository(ContactAction::class)->findOneBy([
+            'uuid'=>$uuid
+        ]);
+
+        if(!$note) return new NotFoundHttpException();
+
+        $em = $this->getDoctrine()->getManager();
+        $params = $request->request->all();
+        if(array_key_exists('note', $params)) $note->setNote($params['note']);
+        $note->setUser($this->getUser());
+        $note->setTimestamp(new \DateTime());
+        $em->persist($note);
+        $em->flush();
+
+        return $this->redirectToRoute('organizations_edit', ['id'=>$note->getOrganization()->getId(), '_fragment'=>'notes']);
+    }
+
+    /**
+     * @Route("/notes/{uuid}", name="delete_note", methods={"DELETE"})
+     */
+    public function deleteNote(string $uuid){
+        /**
+         * @var ContactAction|null
+         */
+        $note = $this->getDoctrine()->getRepository(ContactAction::class)->findOneBy([
+            'uuid'=>$uuid
+        ]);
+
+        if(!$note) return new NotFoundHttpException();
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($note);
         $em->flush();
 
         return new JsonResponse(['deleted'=>true], 200);

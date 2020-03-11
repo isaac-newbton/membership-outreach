@@ -1,0 +1,54 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="container">
+	<div class="row my-3">
+		<div class="col">
+		{% for flashMessage in app.session.flashbag.get('message') %}
+
+		<div class="badge badge-success">
+			{{ flashMessage }}
+		</div>
+
+		{% endfor %}
+		</div>
+	</div>
+	<div class="row py-4">
+		<div class="col">
+			<a href="{{ path("organizations_edit", {id: organization.id}) }}">Back to {{ organization.name }}</a>
+		</div>
+		<div class="col clearfix">
+			<button type="button" class="btn btn-sm btn-outline-danger float-right" id="delete_button">Delete</button>
+		</div>
+	</div>
+    <div class="row py-4">
+		<div class="col">
+			<form action="" method="post">
+				<div class="form-group">
+					<label for="contactActionNote">Note</label>
+					<textarea class="form-control" name="note" id="contactActionNote" required>{{ note.note|raw }}</textarea>
+				</div>
+				<div class="mt-2">
+					<button type="submit" class="btn btn-primary">Update</button>
+				</div>
+			</form>
+		</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+	let deleteButton = document.getElementById('delete_button')
+	deleteButton.addEventListener('click', function(e){
+		if(confirm('Delete this item?')){
+			fetch('{{ path("delete_note", {uuid:note.uuid}) }}', {
+				method: 'delete',
+				redirect: 'follow'
+			}).then((r)=>r.json()).then((result)=>{
+				window.location.href = '{{ path("organizations_edit", {id:organization.id, _fragment:"notes"}) }}'
+			})
+		}
+	})
+</script>
+{% endblock %}

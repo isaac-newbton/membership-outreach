@@ -5,18 +5,14 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ContactActionRepository")
  */
 class ContactAction
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    use EntityIdTrait;
 
     /**
      * @ORM\Column(type="datetime")
@@ -49,15 +45,17 @@ class ContactAction
      */
     private $emails;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Organization", inversedBy="contactActions")
+     */
+    private $organization;
+
     public function __construct()
     {
+        $this->uuid = Uuid::uuid4();
         $this->phoneCalls = new ArrayCollection();
         $this->emails = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
+        $this->timestamp = new \DateTime();
     }
 
     public function getTimestamp(): ?\DateTimeInterface
@@ -166,6 +164,18 @@ class ContactAction
                 $email->setContactAction(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(?Organization $organization): self
+    {
+        $this->organization = $organization;
 
         return $this;
     }
