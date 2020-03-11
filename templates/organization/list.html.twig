@@ -13,31 +13,41 @@
 		{% endfor %}
 		</div>
 	</div>
-    <div class="row py-4">
+    <div class="row mt-4">
         <div class="col">
-            <ul class="list-group">
-                {% for organization in organizations %}
-
-                {# get the open survey count #}
-                {% set openSurveys = 0 %}
-                {% for survey in organization.surveys %}
-                    {% if survey.status != 2 %}
-                        {% set openSurveys = openSurveys + 1 %}
-                    {% endif %}
-                {% endfor %}
-
-                <li class="list-group-item" id="{{ organization.id }}">
-                    <a href="{{path("organizations_edit", {id: organization.id})}}">{{ organization.name }}</a>
-                    <a href="{{ path("organization_surveys", {id: organization.id}) }}" class="btn btn-link text-secondary">Surveys</a>
-                    <a href="{{ path("organization_content", {id: organization.id}) }}" class="btn btn-link text-secondary">Posted Content ({{ organization.postedContents|length }})</a>
-                    <a onClick='return confirm("This will delete all open and closed surveys ({{ organization.surveys|length() }}) for this organization. Are you sure you want to proceed?")' href="{{ path("organizations_delete", {id: organization.id}) }}" class="btn btn-link text-danger">Delete</a>
-                    {% if openSurveys > 0 %}
-                    <span class="float-right badge badge-primary">{{ openSurveys }} Open Survey(s)</span>
-                    {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
+            <table id="organizations" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Surveys</th>
+                        <th>Posted Content</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for organization in organizations %}
+                        <tr>
+                            <td>
+                                <a href="{{path("organizations_edit", {id: organization.id})}}">{{ organization.name }}</a>
+                            </td>
+                            <td>
+                                <a href="{{ path("organization_surveys", {id: organization.id}) }}" class="btn btn-link text-secondary">{{ organization.surveys|length }}</a>
+                            </td>
+                            <td>
+                                <a href="{{ path("organization_content", {id: organization.id}) }}" class="btn btn-link text-secondary">{{ organization.postedContents|length }}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('#organizations').DataTable()
+    })
+</script>
 {% endblock %}
