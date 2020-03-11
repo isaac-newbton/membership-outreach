@@ -57,6 +57,11 @@ class Contact
      */
     private $isPrimary;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $Title;
+
     public function __construct()
     {
         $this->contactNumbers = new ArrayCollection();
@@ -169,6 +174,18 @@ class Contact
     public function setIsPrimary(bool $isPrimary): self
     {
         $this->isPrimary = $isPrimary;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->Title;
+    }
+
+    public function setTitle(?string $Title): self
+    {
+        $this->Title = $Title;
 
         return $this;
     }

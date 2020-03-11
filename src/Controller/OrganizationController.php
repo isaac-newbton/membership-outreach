@@ -138,6 +138,7 @@ class OrganizationController extends AbstractController {
 
         $contact = new Contact();
         $contact->setName($request->get('name'));
+        $contact->setTitle($request->get('title'));
         $contact->setEmail($request->get('email'));
         $contact->setPhone($request->get('phone'));
         $contact->setMobile($request->get('mobile'));
@@ -188,6 +189,7 @@ class OrganizationController extends AbstractController {
         $params = $request->request->all();
         if(array_key_exists('type', $params)) $contact->setType($params['type']);
         if(array_key_exists('name', $params)) $contact->setName($params['name']);
+        if(array_key_exists('title', $params)) $contact->setTitle($params['title']);
         if(array_key_exists('email', $params)) $contact->setEmail($params['email']);
         if(array_key_exists('phone', $params)) $contact->setPhone($params['phone']);
         if(array_key_exists('mobile', $params)) $contact->setMobile($params['mobile']);
