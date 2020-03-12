@@ -18,16 +18,24 @@
             <table id="organizations" class="table table-striped">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Name</th>
+                        <th>Category</th>
                         <th>Surveys</th>
                         <th>Posted Content</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for organization in organizations %}
-                        <tr>
+                        <tr id="{{ organization.id }}">
+                            <td>
+                                <a href="{{path("organizations_edit", {id: organization.id})}}">{{ organization.customId }}</a>
+                            </td>
                             <td>
                                 <a href="{{path("organizations_edit", {id: organization.id})}}">{{ organization.name }}</a>
+                            </td>
+                            <td>
+                                {{ organization.membershipCategory }}
                             </td>
                             <td>
                                 <a href="{{ path("organization_surveys", {id: organization.id}) }}" class="btn btn-link text-secondary">{{ organization.surveys|length }}</a>
@@ -47,7 +55,22 @@
 {% block javascripts %}
 <script>
     $(document).ready(function(){
-        $('#organizations').DataTable()
+        $('#organizations').DataTable({
+            order: [1, 'asc'],
+            initComplete: function(settings, json){
+                if(window.location.hash){
+                    let jumpToId = window.location.hash.substring(1)
+                    let api = this.api()
+                    let row = api.row(function(i, data, node){
+                        return node.id == jumpToId
+                    })
+                    if(0<row.length){
+                        row.show().draw(false)
+                        $(`#${jumpToId}`).addClass('table-primary')
+                    }
+                }
+            }
+        })
     })
 </script>
 {% endblock %}
